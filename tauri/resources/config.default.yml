@@ -1,0 +1,10 @@
+host: "127.0.0.1"
+port: 8386
+
+auth-dir: "~/.config/riin/auth"
+
+api-keys:
+  - "sk-riin-123abc"
+  - "sk-riin-1234567890abcdef"
+
+request-retry: 3

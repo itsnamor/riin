@@ -5,7 +5,7 @@ mod types;
 use tauri::{Manager, RunEvent, WindowEvent};
 
 use commands::{is_proxy_running, start_proxy, stop_proxy};
-use helpers::kill_proxy;
+use helpers::{ensure_config, kill_proxy};
 use types::ProxyState;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -14,6 +14,12 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())
         .manage(ProxyState::new())
+        .setup(|app| {
+            if let Err(e) = ensure_config(app.handle()) {
+                eprintln!("Warning: failed to ensure config: {e}");
+            }
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             start_proxy,
             stop_proxy,

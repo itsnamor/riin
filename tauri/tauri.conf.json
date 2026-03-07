@@ -10,6 +10,7 @@
   },
   "bundle": {
     "active": true,
+    "resources": ["resources/config.default.yml"],
     "externalBin": ["binaries/cli-proxy-api"]
   },
   "app": {
