@@ -10,19 +10,22 @@ export function useConfig() {
 
   const [config, setConfig] = useConfigStore();
 
-  useEffect(() => {
+  const loadConfig = async () => {
     setLoading(true);
-    invoke<string>("read_config")
-      .then((raw) => {
-        const parsed = parse(raw);
-        setConfig(parsed);
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.danger("Failed to load config");
-      })
-      .finally(() => setLoading(false));
-  }, [setConfig]);
+    try {
+      const raw = await invoke<string>("read_config");
+      const parsed = parse(raw);
+      setConfig(parsed);
+    } catch (err) {
+      console.error(err);
+      toast.danger("Failed to load config");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
+  useEffect(() => (loadConfig(), undefined), []);
 
   const applyConfig = async () => {
     setApplying(true);
@@ -36,5 +39,5 @@ export function useConfig() {
     toast.success("Config applied successfully");
   };
 
-  return { loading, applying, config, setConfig, applyConfig };
+  return { loading, applying, config, setConfig, applyConfig, refreshConfig: loadConfig };
 }

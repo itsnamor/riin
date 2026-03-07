@@ -8,16 +8,21 @@ export function useCredentialItems() {
 
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const loadItems = async () => {
     setLoading(true);
-    invoke<CredentialItem[]>("read_credentials")
-      .then(setItems)
-      .catch((err) => {
-        console.error(err);
-        toast.danger("Failed to read credential files");
-      })
-      .finally(() => setLoading(false));
-  }, [setItems]);
+    try {
+      const rawItems = await invoke<CredentialItem[]>("read_credentials");
+      setItems(rawItems);
+    } catch (err) {
+      console.error(err);
+      toast.danger("Failed to read credential files");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  return { loading, items };
+  // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
+  useEffect(() => (loadItems(), undefined), []);
+
+  return { loading, items, refreshItem: loadItems };
 }

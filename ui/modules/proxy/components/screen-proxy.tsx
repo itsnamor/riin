@@ -2,12 +2,27 @@ import { useSetHeaderSlot } from "$/core/stores/layout";
 import { FieldLayout, FieldListText } from "$/modules/form";
 import { ButtonApplyConfig } from "$/modules/proxy/components/button-apply-config";
 import { useConfig } from "$/modules/proxy/hooks/use-config";
-import { NumberField, Spinner } from "@heroui/react";
+import { Button, NumberField, Spinner } from "@heroui/react";
+import { Icon } from "@iconify/react";
 
 export function ScreenProxy() {
-  const { config, loading, applying, setConfig, applyConfig } = useConfig();
+  const { config, loading, applying, setConfig, applyConfig, refreshConfig } = useConfig();
 
-  useSetHeaderSlot(<ButtonApplyConfig onClick={applyConfig} isPending={applying} />);
+  useSetHeaderSlot(
+    <div className="flex gap-1">
+      <Button
+        variant="tertiary"
+        isIconOnly
+        size="sm"
+        onClick={refreshConfig}
+        isDisabled={loading || applying}
+        isPending={loading}
+      >
+        <Icon icon="solar:restart-line-duotone" />
+      </Button>
+      <ButtonApplyConfig onClick={applyConfig} isPending={applying} isDisabled={loading || applying} />
+    </div>,
+  );
 
   if (loading) {
     return (

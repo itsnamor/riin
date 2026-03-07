@@ -1,11 +1,19 @@
 import { useSetHeaderSlot } from "$/core/stores/layout";
 import { ButtonAddProvider, SwitchStatus, useCredentialItems } from "$/modules/providers";
-import { Chip, Spinner, Table } from "@heroui/react";
+import { Button, Chip, Spinner, Table } from "@heroui/react";
+import { Icon } from "@iconify/react";
 
 export function ScreenProviders() {
-  const { items, loading } = useCredentialItems();
+  const { items, loading, refreshItem } = useCredentialItems();
 
-  useSetHeaderSlot(<ButtonAddProvider />);
+  useSetHeaderSlot(
+    <div className="flex gap-1">
+      <Button variant="tertiary" isIconOnly size="sm" onClick={refreshItem} isDisabled={loading} isPending={loading}>
+        <Icon icon="solar:restart-line-duotone" />
+      </Button>
+      <ButtonAddProvider />
+    </div>,
+  );
 
   if (loading) {
     return (
