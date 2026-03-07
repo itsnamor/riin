@@ -4,7 +4,7 @@ mod types;
 
 use tauri::{Manager, RunEvent, WindowEvent};
 
-use commands::{is_proxy_running, start_proxy, stop_proxy};
+use commands::{is_proxy_running, read_config, start_proxy, stop_proxy, write_config};
 use helpers::{ensure_config, kill_proxy};
 use types::ProxyState;
 
@@ -24,6 +24,8 @@ pub fn run() {
             start_proxy,
             stop_proxy,
             is_proxy_running,
+            read_config,
+            write_config,
         ])
         .on_window_event(|window, event| {
             if let WindowEvent::CloseRequested { api, .. } = event {
