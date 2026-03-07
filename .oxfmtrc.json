@@ -1,0 +1,21 @@
+{
+  "printWidth": 120,
+  "useTabs": false,
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "sortTailwindcss": {
+    "functions": ["cn", "clsx"]
+  },
+  "sortImports": {
+    "internalPattern": ["$core/**", "$shared/**", "$modules/**", "$/**"],
+    "groups": ["builtin", "external", ["internal", "subpath"], ["parent", "sibling", "index"], "style", "unknown"],
+    "newlinesBetween": true,
+    "ignoreCase": true
+  },
+  "ignorePatterns": ["**/*.gen.*"]
+}

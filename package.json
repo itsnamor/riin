@@ -1,0 +1,44 @@
+{
+  "name": "riin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "download:binaries": "sh scripts/download-binaries.sh",
+    "ui:dev": "vite",
+    "ui:build": "vite build",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt --write ui/",
+    "fmt:check": "oxfmt --check ui/"
+  },
+  "dependencies": {
+    "@heroui/react": "^3.0.0-beta.8",
+    "@heroui/styles": "^3.0.0-beta.8",
+    "@iconify/react": "^6.0.2",
+    "@tailwindcss/vite": "^4.2.1",
+    "@tauri-apps/plugin-fs": "^2.4.5",
+    "@tauri-apps/plugin-shell": "^2.3.5",
+    "clsx": "^2.1.1",
+    "jotai": "^2.18.0",
+    "lodash-es": "^4.17.23",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwind-variants": "^3.2.2",
+    "tailwindcss": "^4.2.1",
+    "yaml": "^2.8.2"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^25.3.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react-swc": "^4.2.3",
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.51.0",
+    "typescript": "^5.9.3",
+    "vite": "^6"
+  }
+}

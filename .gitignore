@@ -1,0 +1,16 @@
+# Rust
+tauri/target/
+
+# Sidecar binaries
+tauri/binaries/
+
+# Bun / Node
+node_modules/
+dist/
+
+# Tauri generated
+tauri/gen/schemas/
+
+# Env
+.env
+.env.local

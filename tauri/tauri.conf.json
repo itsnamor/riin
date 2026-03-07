@@ -1,0 +1,26 @@
+{
+  "productName": "riin",
+  "version": "0.1.0",
+  "identifier": "com.riin.app",
+  "build": {
+    "beforeDevCommand": "bun run download:binaries && bun run ui:dev",
+    "beforeBuildCommand": "bun run download:binaries && bun run ui:build",
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173"
+  },
+  "bundle": {
+    "active": true,
+    "externalBin": ["binaries/cli-proxy-api"]
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "",
+        "width": 800,
+        "height": 800,
+        "titleBarStyle": "Overlay",
+        "trafficLightPosition": { "x": 20, "y": 30 }
+      }
+    ]
+  }
+}

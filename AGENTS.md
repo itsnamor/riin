@@ -1,0 +1,2 @@
+- Use `type` instead of `interface`
+- Use `kebab-case` for file & folder names

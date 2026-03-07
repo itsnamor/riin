@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+
+@import "./fonts.css";
+@import "./theme.css";
+
+* {
+  font-family: "Be Vietnam Pro", sans-serif;
+
+  @apply no-scrollbar overscroll-none;
+}
+
+body {
+  font-size: 14px;
+  @apply font-light;
+}
+
+button {
+  @apply font-light;
+}
+
+@utility liquid-glass {
+  @apply relative overflow-hidden rounded-2xl border border-white/40 bg-white/20 shadow-[0_8px_32px_rgb(0_0_0/0.12),inset_0_1px_0_rgb(255_255_255/0.6),inset_0_-1px_0_rgb(255_255_255/0.1)] backdrop-blur-xl backdrop-saturate-150 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:bg-linear-to-br before:from-white/30 before:via-transparent before:to-white/5 before:content-[''] dark:border-white/8 dark:bg-white/6 dark:shadow-[0_8px_32px_rgb(0_0_0/0.4),inset_0_1px_0_rgb(255_255_255/0.08),inset_0_-1px_0_rgb(255_255_255/0.03)] dark:before:from-white/10 dark:before:to-white/2;
+}
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
