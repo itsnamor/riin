@@ -1,3 +1,4 @@
+pub mod auth;
 mod config;
 mod ensure_config;
 mod proxy;
