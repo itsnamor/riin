@@ -1,8 +1,8 @@
+import { useProxyStatus } from "$/core/stores/server";
+import { toast } from "@heroui/react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { useEffect } from "react";
-import { useProxyStatus } from "$/core/stores/server";
-import { toast } from "@heroui/react";
 
 export function useProxyControl() {
   const [status, setStatus] = useProxyStatus();

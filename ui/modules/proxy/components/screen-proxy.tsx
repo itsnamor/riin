@@ -1,9 +1,9 @@
 import { useSetHeaderSlot } from "$/core/stores/layout";
-import { ButtonApplyConfig } from "$/modules/configuration";
 import { FieldLayout, FieldListText } from "$/modules/form";
+import { ButtonApplyConfig } from "$/modules/proxy/components/button-apply-config";
 import { NumberField } from "@heroui/react";
 
-export function Configuration() {
+export function ScreenProxy() {
   useSetHeaderSlot(<ButtonApplyConfig />);
 
   return (

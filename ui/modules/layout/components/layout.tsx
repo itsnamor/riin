@@ -7,7 +7,7 @@ import { PropsWithChildren } from "react";
 
 const ITEMS = [
   { icon: "solar:stars-bold-duotone", label: "Providers" },
-  { icon: "solar:settings-bold-duotone", label: "Configuration" },
+  { icon: "solar:server-2-bold-duotone", label: "Proxy" },
 ];
 
 export function Layout({ children }: PropsWithChildren) {

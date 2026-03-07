@@ -1,8 +1,8 @@
 import "$/core/styles/main.css";
 import { useSidebarActiveItemValue } from "$/core/stores/layout";
-import { Configuration } from "$/modules/configuration";
 import { Layout } from "$/modules/layout";
-import { Providers } from "$/modules/providers";
+import { ScreenProviders } from "$/modules/providers";
+import { ScreenProxy } from "$/modules/proxy";
 import { Toast } from "@heroui/react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -14,8 +14,8 @@ function App() {
     <>
       <Toast.Provider placement="bottom end" />
       <Layout>
-        {activeItem === "Configuration" && <Configuration />}
-        {activeItem === "Providers" && <Providers />}
+        {activeItem === "Proxy" && <ScreenProxy />}
+        {activeItem === "Providers" && <ScreenProviders />}
       </Layout>
     </>
   );
