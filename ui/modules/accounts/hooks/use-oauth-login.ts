@@ -51,5 +51,16 @@ export function useOAuthLogin({ onSuccess }: UseOAuthLoginProps = {}) {
     }
   };
 
-  return { startLogin, pending };
+  const cancelLogin = async () => {
+    if (!pending) return;
+
+    try {
+      await invoke("cancel_oauth_login");
+    } catch (err) {
+      console.error(err);
+    }
+    setPending(null);
+  };
+
+  return { startLogin, cancelLogin, pending };
 }

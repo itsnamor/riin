@@ -5,11 +5,11 @@ mod types;
 use tauri::{Manager, RunEvent, WindowEvent};
 
 use commands::{
-    is_proxy_running, read_config, read_credentials, start_oauth_login, start_proxy, stop_proxy,
-    write_config, write_credential,
+    cancel_oauth_login, is_proxy_running, read_config, read_credentials, start_oauth_login,
+    start_proxy, stop_proxy, write_config, write_credential,
 };
 use helpers::{ensure_config, kill_proxy};
-use types::ProxyState;
+use types::{OAuthState, ProxyState};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -17,6 +17,7 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())
         .manage(ProxyState::new())
+        .manage(OAuthState::new())
         .setup(|app| {
             if let Err(e) = ensure_config(app.handle()) {
                 eprintln!("Warning: failed to ensure config: {e}");
@@ -28,6 +29,7 @@ pub fn run() {
             stop_proxy,
             is_proxy_running,
             start_oauth_login,
+            cancel_oauth_login,
             read_config,
             write_config,
             read_credentials,

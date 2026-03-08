@@ -3,9 +3,14 @@ use tauri_plugin_shell::ShellExt;
 use tauri_plugin_shell::process::CommandEvent;
 
 use crate::helpers::config_path;
+use crate::types::OAuthState;
 
 #[tauri::command]
-pub fn start_oauth_login(app: AppHandle, provider: String) -> Result<(), String> {
+pub fn start_oauth_login(
+    app: AppHandle,
+    state: tauri::State<'_, OAuthState>,
+    provider: String,
+) -> Result<(), String> {
     let flag = match provider.as_str() {
         "antigravity" => "--antigravity-login",
         "claude" => "--claude-login",
@@ -15,13 +20,15 @@ pub fn start_oauth_login(app: AppHandle, provider: String) -> Result<(), String>
 
     let path = config_path()?;
 
-    let (mut rx, _child) = app
+    let (mut rx, child) = app
         .shell()
         .sidecar("cli-proxy-api")
         .map_err(|e| e.to_string())?
         .args([flag, "--config", &path.to_string_lossy()])
         .spawn()
         .map_err(|e| e.to_string())?;
+
+    *state.child.lock().map_err(|e| e.to_string())? = Some(child);
 
     let handle = app.clone();
     let provider_name = provider.clone();

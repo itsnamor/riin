@@ -1,3 +1,4 @@
+mod cancel_oauth_login;
 mod is_proxy_running;
 mod read_config;
 mod read_credentials;
@@ -7,6 +8,7 @@ mod stop_proxy;
 mod write_config;
 mod write_credential;
 
+pub use cancel_oauth_login::cancel_oauth_login;
 pub use is_proxy_running::is_proxy_running;
 pub use read_config::read_config;
 pub use read_credentials::read_credentials;
