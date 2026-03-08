@@ -59,3 +59,14 @@ pub fn write_credential(filename: &str, credential: &Credential) -> Result<(), S
 
     fs::write(&path, content).map_err(|e| format!("Failed to write {filename}: {e}"))
 }
+
+pub fn delete_credential(filename: &str) -> Result<(), String> {
+    let dir = auth_dir()?;
+    let path = dir.join(filename);
+
+    if !path.exists() {
+        return Err(format!("Credential file not found: {filename}"));
+    }
+
+    fs::remove_file(&path).map_err(|e| format!("Failed to delete {filename}: {e}"))
+}

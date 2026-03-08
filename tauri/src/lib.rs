@@ -5,8 +5,8 @@ mod types;
 use tauri::{Manager, RunEvent, WindowEvent};
 
 use commands::{
-    cancel_oauth_login, is_proxy_running, read_config, read_credentials, start_oauth_login,
-    start_proxy, stop_proxy, write_config, write_credential,
+    cancel_oauth_login, delete_credential, is_proxy_running, read_config, read_credentials,
+    start_oauth_login, start_proxy, stop_proxy, write_config, write_credential,
 };
 use helpers::{ensure_config, kill_proxy};
 use types::{OAuthState, ProxyState};
@@ -34,6 +34,7 @@ pub fn run() {
             write_config,
             read_credentials,
             write_credential,
+            delete_credential,
         ])
         .on_window_event(|window, event| {
             if let WindowEvent::CloseRequested { api, .. } = event {

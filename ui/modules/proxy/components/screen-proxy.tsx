@@ -2,7 +2,7 @@ import { useSetHeaderSlot } from "$/core/stores/layout";
 import { FieldLayout, FieldListText } from "$/modules/form";
 import { ButtonApplyConfig } from "$/modules/proxy/components/button-apply-config";
 import { useConfig } from "$/modules/proxy/hooks/use-config";
-import { Button, NumberField, Spinner } from "@heroui/react";
+import { Button, NumberField, Spinner, Select, ListBox } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
 export function ScreenProxy() {
@@ -52,6 +52,27 @@ export function ScreenProxy() {
 
         <FieldLayout label="API Keys" direction="vertical">
           <FieldListText value={config["api-keys"]} onChange={(keys) => setConfig({ "api-keys": keys })} />
+        </FieldLayout>
+
+        <FieldLayout label="Routing strategy" description="For selecting credentials when multiple match">
+          <Select>
+            <Select.Trigger>
+              <Select.Value />
+              <Select.Indicator />
+            </Select.Trigger>
+            <Select.Popover>
+              <ListBox>
+                <ListBox.Item id="round-robin" textValue="Round robin">
+                  Round robin
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+                <ListBox.Item id="fill-first" textValue="Fill first">
+                  Fill first
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              </ListBox>
+            </Select.Popover>
+          </Select>
         </FieldLayout>
       </div>
     </div>

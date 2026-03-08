@@ -1,5 +1,6 @@
 import { useSetHeaderSlot } from "$/core/stores/layout";
 import { ButtonAddAccount, ToggleStatus, ButtonViewRawCredential, useCredentialItems } from "$/modules/accounts";
+import { ButtonDeleteAccount } from "$/modules/accounts/components/button-delete-account";
 import { Button, Spinner, Table } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { capitalize } from "lodash-es";
@@ -31,6 +32,7 @@ export function ScreenAccounts() {
         <Table.Content>
           <Table.Header>
             <Table.Column isRowHeader>Email</Table.Column>
+            <Table.Column isRowHeader>Status</Table.Column>
             <Table.Column isRowHeader>Actions</Table.Column>
           </Table.Header>
 
@@ -46,9 +48,12 @@ export function ScreenAccounts() {
                   </div>
                 </Table.Cell>
                 <Table.Cell>
+                  <ToggleStatus filename={filename} />
+                </Table.Cell>
+                <Table.Cell>
                   <div className="flex gap-1">
-                    <ToggleStatus filename={filename} />
                     <ButtonViewRawCredential filename={filename} />
+                    <ButtonDeleteAccount filename={filename} />
                   </div>
                 </Table.Cell>
               </Table.Row>
