@@ -2,11 +2,11 @@ import { useCredentialFilesStore } from "$/core/stores/credential";
 import { Switch, toast } from "@heroui/react";
 import { invoke } from "@tauri-apps/api/core";
 
-type SwitchStatusProps = {
+type ToggleStatusProps = {
   filename: string;
 };
 
-export function SwitchStatus({ filename }: SwitchStatusProps) {
+export function ToggleStatus({ filename }: ToggleStatusProps) {
   const [items, setItems] = useCredentialFilesStore();
   const item = items.find((i) => i.filename === filename);
 
