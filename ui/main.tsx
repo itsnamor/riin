@@ -1,7 +1,7 @@
 import "$/core/styles/main.css";
 import { useSidebarActiveItemValue } from "$/core/stores/layout";
+import { ScreenAccounts } from "$/modules/accounts";
 import { Layout } from "$/modules/layout";
-import { ScreenProviders } from "$/modules/providers";
 import { ScreenProxy } from "$/modules/proxy";
 import { Toast } from "@heroui/react";
 import { StrictMode } from "react";
@@ -12,11 +12,12 @@ function App() {
 
   return (
     <>
-      <Toast.Provider placement="bottom end" />
       <Layout>
         {activeItem === "Proxy" && <ScreenProxy />}
-        {activeItem === "Providers" && <ScreenProviders />}
+        {activeItem === "Accounts" && <ScreenAccounts />}
       </Layout>
+
+      <Toast.Provider placement="bottom end" />
     </>
   );
 }

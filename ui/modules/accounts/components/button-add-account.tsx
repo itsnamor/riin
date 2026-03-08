@@ -1,7 +1,7 @@
-import { useOAuthLogin } from "$/modules/providers";
+import { useOAuthLogin } from "$/modules/accounts";
 import { Button, Modal, Spinner, Tabs } from "@heroui/react";
 
-type ButtonAddProviderProps = {
+type ButtonAddAccountProps = {
   onSuccess?: () => void;
 };
 
@@ -11,7 +11,7 @@ const providers = [
   { id: "codex", label: "Codex" },
 ] as const;
 
-export function ButtonAddProvider({ onSuccess }: ButtonAddProviderProps) {
+export function ButtonAddAccount({ onSuccess }: ButtonAddAccountProps) {
   const { startLogin, pending } = useOAuthLogin({ onSuccess });
 
   return (

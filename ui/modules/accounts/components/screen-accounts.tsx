@@ -1,11 +1,10 @@
 import { useSetHeaderSlot } from "$/core/stores/layout";
-import { ButtonAddProvider, ToggleStatus, useCredentialItems } from "$/modules/providers";
-import { ButtonViewRawCredential } from "$/modules/providers/components/button-view-raw-credential";
+import { ButtonAddAccount, ToggleStatus, ButtonViewRawCredential, useCredentialItems } from "$/modules/accounts";
 import { Button, Spinner, Table } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { capitalize } from "lodash-es";
 
-export function ScreenProviders() {
+export function ScreenAccounts() {
   const { items, loading, refreshItem } = useCredentialItems();
 
   useSetHeaderSlot(
@@ -14,7 +13,7 @@ export function ScreenProviders() {
         <Icon icon="solar:restart-line-duotone" />
       </Button>
 
-      <ButtonAddProvider onSuccess={refreshItem} />
+      <ButtonAddAccount onSuccess={refreshItem} />
     </div>,
   );
 
@@ -29,7 +28,7 @@ export function ScreenProviders() {
   return (
     <Table>
       <Table.ScrollContainer>
-        <Table.Content aria-label="Providers">
+        <Table.Content>
           <Table.Header>
             <Table.Column isRowHeader>Email</Table.Column>
             <Table.Column isRowHeader>Actions</Table.Column>
