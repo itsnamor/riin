@@ -11,6 +11,7 @@ export function ScreenProviders() {
       <Button variant="tertiary" isIconOnly size="sm" onClick={refreshItem} isDisabled={loading} isPending={loading}>
         <Icon icon="solar:restart-line-duotone" />
       </Button>
+
       <ButtonAddProvider />
     </div>,
   );

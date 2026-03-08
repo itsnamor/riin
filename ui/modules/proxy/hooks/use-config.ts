@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { toast } from "@heroui/react";
-import { parse, stringify } from "yaml";
 import { useConfigStore } from "$/core/stores/config";
+import { toast } from "@heroui/react";
+import { invoke } from "@tauri-apps/api/core";
+import { useEffect, useState } from "react";
+import { parse, stringify } from "yaml";
 
 export function useConfig() {
   const [loading, setLoading] = useState(false);
