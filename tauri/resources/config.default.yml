@@ -8,3 +8,6 @@ api-keys:
   - "sk-riin-1234567890abcdef"
 
 request-retry: 3
+
+routing:
+  strategy: "round-robin"

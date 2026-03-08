@@ -1,3 +1,4 @@
+import { Config } from "$/core/stores/config";
 import { useSetHeaderSlot } from "$/core/stores/layout";
 import { FieldLayout, FieldListText } from "$/modules/form";
 import { ButtonApplyConfig } from "$/modules/proxy/components/button-apply-config";
@@ -55,7 +56,10 @@ export function ScreenProxy() {
         </FieldLayout>
 
         <FieldLayout label="Routing strategy" description="For selecting credentials when multiple match">
-          <Select>
+          <Select
+            value={config.routing.strategy}
+            onChange={(strategy) => setConfig({ routing: { strategy: strategy as Config["routing"]["strategy"] } })}
+          >
             <Select.Trigger>
               <Select.Value />
               <Select.Indicator />
