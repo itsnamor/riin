@@ -5,8 +5,8 @@ mod types;
 use tauri::{Manager, RunEvent, WindowEvent};
 
 use commands::{
-    is_proxy_running, read_config, read_credentials, start_proxy, stop_proxy, write_config,
-    write_credential,
+    is_proxy_running, read_config, read_credentials, start_oauth_login, start_proxy, stop_proxy,
+    write_config, write_credential,
 };
 use helpers::{ensure_config, kill_proxy};
 use types::ProxyState;
@@ -27,6 +27,7 @@ pub fn run() {
             start_proxy,
             stop_proxy,
             is_proxy_running,
+            start_oauth_login,
             read_config,
             write_config,
             read_credentials,

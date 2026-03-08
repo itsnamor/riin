@@ -1,8 +1,19 @@
-import { Button, Modal, Tabs } from "@heroui/react";
+import { useOAuthLogin } from "$/modules/providers";
+import { Button, Modal, Spinner, Tabs } from "@heroui/react";
 
-// type ButtonAddProviderProps = {};
+type ButtonAddProviderProps = {
+  onSuccess?: () => void;
+};
 
-export function ButtonAddProvider() {
+const providers = [
+  { id: "antigravity", label: "Antigravity" },
+  { id: "claude", label: "Claude" },
+  { id: "codex", label: "Codex" },
+] as const;
+
+export function ButtonAddProvider({ onSuccess }: ButtonAddProviderProps) {
+  const { startLogin, pending } = useOAuthLogin({ onSuccess });
+
   return (
     <Modal>
       <Button size="sm">Add</Button>
@@ -29,15 +40,19 @@ export function ButtonAddProvider() {
                 </Tabs.ListContainer>
 
                 <Tabs.Panel id="oauth" className="flex flex-col gap-2 px-0">
-                  <Button variant="secondary" fullWidth>
-                    Antigravity
-                  </Button>
-                  <Button variant="secondary" fullWidth>
-                    Claude
-                  </Button>
-                  <Button variant="secondary" fullWidth>
-                    Codex
-                  </Button>
+                  {providers.map(({ id, label }) => (
+                    <Button
+                      key={id}
+                      variant="secondary"
+                      fullWidth
+                      isDisabled={!!pending}
+                      isPending={pending === id}
+                      onPress={() => startLogin(id)}
+                    >
+                      {pending === id && <Spinner size="sm" />}
+                      {label}
+                    </Button>
+                  ))}
                 </Tabs.Panel>
 
                 <Tabs.Panel id="key" className="flex flex-col gap-2 px-0">

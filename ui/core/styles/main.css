@@ -5,8 +5,6 @@
 @import "./theme.css";
 
 * {
-  font-family: "Be Vietnam Pro", sans-serif;
-
   @apply no-scrollbar overscroll-none;
 }
 
@@ -29,4 +27,8 @@ button {
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@theme {
+  --font-sans: "Be Vietnam Pro", sans-serif;
 }

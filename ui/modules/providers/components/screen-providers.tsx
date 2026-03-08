@@ -1,7 +1,9 @@
 import { useSetHeaderSlot } from "$/core/stores/layout";
 import { ButtonAddProvider, SwitchStatus, useCredentialItems } from "$/modules/providers";
+import { ButtonViewRawCredential } from "$/modules/providers/components/button-view-raw-credential";
 import { Button, Chip, Spinner, Table } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { capitalize } from "lodash-es";
 
 export function ScreenProviders() {
   const { items, loading, refreshItem } = useCredentialItems();
@@ -12,7 +14,7 @@ export function ScreenProviders() {
         <Icon icon="solar:restart-line-duotone" />
       </Button>
 
-      <ButtonAddProvider />
+      <ButtonAddProvider onSuccess={refreshItem} />
     </div>,
   );
 
@@ -30,25 +32,31 @@ export function ScreenProviders() {
         <Table.Content aria-label="Providers">
           <Table.Header>
             <Table.Column isRowHeader>Email</Table.Column>
-            <Table.Column>Type</Table.Column>
             <Table.Column>Actions</Table.Column>
           </Table.Header>
           <Table.Body>
             {items.map(({ credential, filename }) => (
               <Table.Row key={filename} id={filename}>
                 <Table.Cell>
-                  <div className="flex items-center gap-2">
-                    {credential.email}
-                    {credential.disabled && (
-                      <Chip size="sm" color="danger" variant="soft">
-                        disabled
-                      </Chip>
-                    )}
+                  <div className="flex flex-col gap-1">
+                    <div className="flex gap-2">
+                      <span> {credential.email} </span>
+                      {credential.disabled && (
+                        <Chip size="sm" color="danger" variant="soft">
+                          disabled
+                        </Chip>
+                      )}
+                    </div>
+                    <div>
+                      <span className="text-muted text-xs">{capitalize(credential.type)}</span>
+                    </div>
                   </div>
                 </Table.Cell>
-                <Table.Cell>{credential.type}</Table.Cell>
                 <Table.Cell>
-                  <SwitchStatus filename={filename} />
+                  <div className="flex gap-1">
+                    <SwitchStatus filename={filename} />
+                    <ButtonViewRawCredential filename={filename} />
+                  </div>
                 </Table.Cell>
               </Table.Row>
             ))}
