@@ -37,16 +37,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Bun
+      - name: Install Bun with cache
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-
-      - name: Bun cache
-        uses: actions/setup-node@v4
-        with:
-          cache: 'bun'
-          cache-dependency-path: bun.lock
+          cache: true
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -58,10 +53,7 @@ jobs:
         with:
           workspaces: './tauri -> target'
 
-      - name: Install frontend dependencies
-        run: bun install
-
-      - name: Download platform-specific binary
+      - name: Download target platform binary
         run: |
           REPO="router-for-me/CLIProxyAPI"
           VERSION=$(curl -sL "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
@@ -85,7 +77,7 @@ jobs:
           ASSET_NAME="CLIProxyAPI_${VERSION_NUM}_${OS}_${GOARCH}.${EXT}"
           DOWNLOAD_URL="https://github.com/$REPO/releases/download/$VERSION/$ASSET_NAME"
 
-          echo "Downloading $DOWNLOAD_URL ..."
+          echo "Downloading $DOWNLOAD_URL for $TARGET ..."
 
           curl -fSL -o "temp.${EXT}" "$DOWNLOAD_URL"
           if [ "$EXT" = "zip" ]; then
@@ -95,7 +87,7 @@ jobs:
             tar -xzf "temp.${EXT}" -C "temp_extracted"
           fi
 
-          # Find and move binary
+          # Find and move binary to expected path for Tauri
           BINARY=$(find temp_extracted \( -name "CLIProxyAPI${BIN_SUFFIX}" -o -name "cli-proxy-api${BIN_SUFFIX}" \) -type f | head -1)
           if [ -z "$BINARY" ]; then
             echo "Error: Binary not found in archive"
@@ -103,12 +95,12 @@ jobs:
             exit 1
           fi
 
-          # Move to the expected path (without target suffix to match tauri.conf.json)
           mv "$BINARY" "tauri/binaries/cli-proxy-api${BIN_SUFFIX}"
           chmod +x "tauri/binaries/cli-proxy-api${BIN_SUFFIX}" || true
 
           rm -rf "temp.${EXT}" "temp_extracted"
-          ls -la tauri/binaries/
+          echo "Downloaded binary:"
+          ls -la tauri/binaries/cli-proxy-api*
         shell: bash
 
       - name: Build Tauri app
