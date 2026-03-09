@@ -17,14 +17,19 @@ jobs:
         include:
           - platform: 'macos-latest'
             args: '--target aarch64-apple-darwin'
+            rust_target: 'aarch64-apple-darwin'
           - platform: 'macos-latest'
             args: '--target x86_64-apple-darwin'
+            rust_target: 'x86_64-apple-darwin'
           - platform: 'ubuntu-latest'
             args: '--target x86_64-unknown-linux-gnu'
+            rust_target: 'x86_64-unknown-linux-gnu'
           - platform: 'ubuntu-latest'
             args: '--target aarch64-unknown-linux-gnu'
+            rust_target: 'aarch64-unknown-linux-gnu'
           - platform: 'windows-latest'
             args: '--target x86_64-pc-windows-msvc'
+            rust_target: 'x86_64-pc-windows-msvc'
 
     runs-on: ${{ matrix.platform }}
 
@@ -37,10 +42,16 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Bun cache
+        uses: actions/setup-node@v4
+        with:
+          cache: 'bun'
+          cache-dependency-path: bun.lock
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.args == '--target aarch64-apple-darwin' && 'aarch64-apple-darwin' || matrix.args == '--target x86_64-apple-darwin' && 'x86_64-apple-darwin' || matrix.args == '--target x86_64-unknown-linux-gnu' && 'x86_64-unknown-linux-gnu' || matrix.args == '--target aarch64-unknown-linux-gnu' && 'aarch64-unknown-linux-gnu' || 'x86_64-pc-windows-msvc' }}
+          targets: ${{ matrix.rust_target }}
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
@@ -50,7 +61,7 @@ jobs:
       - name: Install frontend dependencies
         run: bun install
 
-      - name: Download all platform binaries
+      - name: Download platform-specific binary
         run: |
           REPO="router-for-me/CLIProxyAPI"
           VERSION=$(curl -sL "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
@@ -59,42 +70,44 @@ jobs:
 
           mkdir -p tauri/binaries
 
-          download_binary() {
-            local OS=$1
-            local GOARCH=$2
-            local TARGET=$3
-            local EXT=$4
-            local BIN_SUFFIX=$5
+          TARGET="${{ matrix.rust_target }}"
 
-            ASSET_NAME="CLIProxyAPI_${VERSION_NUM}_${OS}_${GOARCH}.${EXT}"
-            DOWNLOAD_URL="https://github.com/$REPO/releases/download/$VERSION/$ASSET_NAME"
+          # Map target to download parameters
+          case "$TARGET" in
+            aarch64-apple-darwin)      OS="darwin"; GOARCH="arm64"; EXT="tar.gz"; BIN_SUFFIX="" ;;
+            x86_64-apple-darwin)       OS="darwin"; GOARCH="amd64"; EXT="tar.gz"; BIN_SUFFIX="" ;;
+            aarch64-unknown-linux-gnu) OS="linux";  GOARCH="arm64"; EXT="tar.gz"; BIN_SUFFIX="" ;;
+            x86_64-unknown-linux-gnu)  OS="linux";  GOARCH="amd64"; EXT="tar.gz"; BIN_SUFFIX="" ;;
+            x86_64-pc-windows-msvc)    OS="windows"; GOARCH="amd64"; EXT="zip"; BIN_SUFFIX=".exe" ;;
+            *) echo "Error: Unknown target $TARGET"; exit 1 ;;
+          esac
 
-            echo "Downloading $DOWNLOAD_URL ..."
+          ASSET_NAME="CLIProxyAPI_${VERSION_NUM}_${OS}_${GOARCH}.${EXT}"
+          DOWNLOAD_URL="https://github.com/$REPO/releases/download/$VERSION/$ASSET_NAME"
 
-            if curl -fSL -o "temp.${EXT}" "$DOWNLOAD_URL"; then
-              if [ "$EXT" = "zip" ]; then
-                unzip -q "temp.${EXT}" -d "temp_extracted"
-              else
-                mkdir -p "temp_extracted"
-                tar -xzf "temp.${EXT}" -C "temp_extracted"
-              fi
+          echo "Downloading $DOWNLOAD_URL ..."
 
-              find temp_extracted -name "*CLIProxyAPI*$BIN_SUFFIX" -type f -exec mv {} "tauri/binaries/cli-proxy-api-${TARGET}${BIN_SUFFIX}" \;
-              chmod +x "tauri/binaries/cli-proxy-api-${TARGET}${BIN_SUFFIX}" || true
+          curl -fSL -o "temp.${EXT}" "$DOWNLOAD_URL"
+          if [ "$EXT" = "zip" ]; then
+            unzip -q "temp.${EXT}" -d "temp_extracted"
+          else
+            mkdir -p "temp_extracted"
+            tar -xzf "temp.${EXT}" -C "temp_extracted"
+          fi
 
-              rm -rf "temp.${EXT}" "temp_extracted"
-            else
-              echo "Warning: Failed to download $ASSET_NAME"
-            fi
-          }
+          # Find and move binary
+          BINARY=$(find temp_extracted \( -name "CLIProxyAPI${BIN_SUFFIX}" -o -name "cli-proxy-api${BIN_SUFFIX}" \) -type f | head -1)
+          if [ -z "$BINARY" ]; then
+            echo "Error: Binary not found in archive"
+            find temp_extracted -type f
+            exit 1
+          fi
 
-          download_binary "darwin" "arm64" "aarch64-apple-darwin" "tar.gz" ""
-          download_binary "darwin" "amd64" "x86_64-apple-darwin" "tar.gz" ""
-          download_binary "linux" "amd64" "x86_64-unknown-linux-gnu" "tar.gz" ""
-          download_binary "linux" "arm64" "aarch64-unknown-linux-gnu" "tar.gz" ""
-          download_binary "windows" "amd64" "x86_64-pc-windows-msvc" "zip" ".exe"
-          download_binary "windows" "arm64" "aarch64-pc-windows-msvc" "zip" ".exe"
+          # Move to the expected path (without target suffix to match tauri.conf.json)
+          mv "$BINARY" "tauri/binaries/cli-proxy-api${BIN_SUFFIX}"
+          chmod +x "tauri/binaries/cli-proxy-api${BIN_SUFFIX}" || true
 
+          rm -rf "temp.${EXT}" "temp_extracted"
           ls -la tauri/binaries/
         shell: bash
 
