@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "tauri dev",
     "build": "tauri build",
+    "build:macos": "tauri build --target aarch64-apple-darwin",
+    "build:win": "tauri build --target x86_64-pc-windows-msvc",
+    "build:all": "bun run build:macos && bun run build:win",
     "download:binaries": "sh scripts/download-binaries.sh",
     "ui:dev": "vite",
     "ui:build": "vite build",
