@@ -51,7 +51,7 @@ export function ScreenAccounts() {
                   <ToggleStatus filename={filename} />
                 </Table.Cell>
                 <Table.Cell>
-                  <div className="flex gap-1">
+                  <div className="flex">
                     <ButtonViewRawCredential filename={filename} />
                     <ButtonDeleteAccount filename={filename} />
                   </div>

@@ -34,7 +34,8 @@ export function ButtonDeleteAccount({ filename }: ButtonDeleteAccountProps) {
               <Modal.Heading>Deleting account?</Modal.Heading>
             </Modal.Header>
             <Modal.Body>
-              Are you sure you want to delete <span className="font-semibold">{filename}</span> account?
+              <div>Are you sure you want to delete following account?</div>
+              <div className="text-danger mt-1 font-mono font-medium">{filename}</div>
             </Modal.Body>
 
             <Modal.Footer>
