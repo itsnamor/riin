@@ -13,7 +13,7 @@ export function ButtonViewRawCredential({ filename }: ButtonViewRawCredentialPro
   return (
     <Modal>
       <Button size="sm" variant="ghost" isIconOnly>
-        <Icon icon="solar:eye-line-duotone" />
+        <Icon icon="solar:info-circle-line-duotone" />
       </Button>
 
       <Modal.Backdrop>
