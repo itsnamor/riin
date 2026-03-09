@@ -66,11 +66,11 @@ export function ScreenProxy() {
             </Select.Trigger>
             <Select.Popover>
               <ListBox>
-                <ListBox.Item id="round-robin" textValue="Round robin">
-                  Round robin
+                <ListBox.Item id="round-robin">
+                  Round-robin
                   <ListBox.ItemIndicator />
                 </ListBox.Item>
-                <ListBox.Item id="fill-first" textValue="Fill first">
+                <ListBox.Item id="fill-first">
                   Fill first
                   <ListBox.ItemIndicator />
                 </ListBox.Item>

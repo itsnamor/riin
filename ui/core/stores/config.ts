@@ -7,6 +7,15 @@ export type Config = {
   routing: {
     strategy: "round-robin" | "fill-first";
   };
+
+  "claude-api-key": Array<{
+    "api-key": string;
+    "base-url"?: string;
+    models?: Array<{
+      name: string;
+      alias: string;
+    }>;
+  }>;
 };
 
 const atomPort = atom<number>();

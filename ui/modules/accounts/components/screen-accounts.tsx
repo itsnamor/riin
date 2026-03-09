@@ -1,7 +1,7 @@
 import { useSetHeaderSlot } from "$/core/stores/layout";
 import { ButtonAddAccount, ToggleStatus, ButtonViewRawCredential, useCredentialItems } from "$/modules/accounts";
 import { ButtonDeleteAccount } from "$/modules/accounts/components/button-delete-account";
-import { Button, Spinner, Table } from "@heroui/react";
+import { Button, EmptyState, Spinner, Table } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { capitalize } from "lodash-es";
 
@@ -14,7 +14,7 @@ export function ScreenAccounts() {
         <Icon icon="solar:restart-line-duotone" />
       </Button>
 
-      <ButtonAddAccount onSuccess={refreshItem} />
+      <ButtonAddAccount />
     </div>,
   );
 
@@ -36,7 +36,7 @@ export function ScreenAccounts() {
             <Table.Column isRowHeader>Actions</Table.Column>
           </Table.Header>
 
-          <Table.Body>
+          <Table.Body renderEmptyState={() => <EmptyState className="flex justify-center">Nothing to show</EmptyState>}>
             {items.map(({ credential, filename }) => (
               <Table.Row key={filename} id={filename}>
                 <Table.Cell>

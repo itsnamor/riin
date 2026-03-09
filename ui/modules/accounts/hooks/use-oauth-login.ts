@@ -28,8 +28,6 @@ export function useOAuthLogin({ onSuccess }: UseOAuthLoginProps = {}) {
       if (success) {
         toast.success(`${capitalize(provider)} login successful`);
         onSuccess?.();
-      } else {
-        toast.danger(`${capitalize(provider)} login failed`);
       }
     });
 
