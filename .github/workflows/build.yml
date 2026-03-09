@@ -32,6 +32,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install system dependencies (macOS)
+        if: matrix.platform == 'macos-latest'
+        run: brew install vips
+
+      - name: Install system dependencies (Linux)
+        if: matrix.platform == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install -y libvips-dev
+
       - name: Install Bun with cache
         uses: oven-sh/setup-bun@v2
         with:
@@ -51,7 +59,7 @@ jobs:
         run: bash scripts/download-binaries.sh "" ${{ matrix.rust_target }}
 
       - name: Build Tauri app
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@v0.6.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
