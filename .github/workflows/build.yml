@@ -54,7 +54,7 @@ jobs:
           workspaces: './tauri -> target'
 
       - name: Download target platform binary
-        run: sh scripts/download-binaries.sh "" ${{ matrix.rust_target }}
+        run: bash scripts/download-binaries.sh "" ${{ matrix.rust_target }}
         shell: bash
 
       - name: Build Tauri app
