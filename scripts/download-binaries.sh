@@ -7,6 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BINARIES_DIR="$SCRIPT_DIR/../tauri/binaries"
 
 VERSION="${1:-}"
+TARGET_TRIPLE="${2:-}"
 
 if [ -z "$VERSION" ]; then
   echo "Fetching latest version..."
@@ -21,22 +22,36 @@ VERSION_NUM="${VERSION#v}"
 
 echo "CLIProxyAPI version: $VERSION"
 
-# Detect OS
-OS="$(uname -s)"
-case "$OS" in
-  Darwin)                             PLATFORM="darwin" ;;
-  Linux)                              PLATFORM="linux" ;;
-  MINGW*|MSYS*|CYGWIN*|Windows_NT)   PLATFORM="windows" ;;
-  *) echo "Error: Unsupported OS: $OS"; exit 1 ;;
-esac
+# If target triple provided, use it; otherwise detect from system
+if [ -n "$TARGET_TRIPLE" ]; then
+  echo "Using target: $TARGET_TRIPLE"
+  case "$TARGET_TRIPLE" in
+    aarch64-apple-darwin)      PLATFORM="darwin";  GOARCH="arm64" ;;
+    x86_64-apple-darwin)       PLATFORM="darwin";  GOARCH="amd64" ;;
+    aarch64-unknown-linux-gnu) PLATFORM="linux";   GOARCH="arm64" ;;
+    x86_64-unknown-linux-gnu)  PLATFORM="linux";   GOARCH="amd64" ;;
+    x86_64-pc-windows-msvc)    PLATFORM="windows"; GOARCH="amd64" ;;
+    aarch64-pc-windows-msvc)   PLATFORM="windows"; GOARCH="arm64" ;;
+    *) echo "Error: Unknown target: $TARGET_TRIPLE"; exit 1 ;;
+  esac
+else
+  # Detect OS
+  OS="$(uname -s)"
+  case "$OS" in
+    Darwin)                             PLATFORM="darwin" ;;
+    Linux)                              PLATFORM="linux" ;;
+    MINGW*|MSYS*|CYGWIN*|Windows_NT)   PLATFORM="windows" ;;
+    *) echo "Error: Unsupported OS: $OS"; exit 1 ;;
+  esac
 
-# Detect architecture
-ARCH="$(uname -m)"
-case "$ARCH" in
-  x86_64|amd64)   GOARCH="amd64" ;;
-  arm64|aarch64)   GOARCH="arm64" ;;
-  *) echo "Error: Unsupported architecture: $ARCH"; exit 1 ;;
-esac
+  # Detect architecture
+  ARCH="$(uname -m)"
+  case "$ARCH" in
+    x86_64|amd64)   GOARCH="amd64" ;;
+    arm64|aarch64)   GOARCH="arm64" ;;
+    *) echo "Error: Unsupported architecture: $ARCH"; exit 1 ;;
+  esac
+fi
 
 # Map to Tauri target triple
 case "${PLATFORM}_${GOARCH}" in
@@ -59,7 +74,7 @@ fi
 
 ASSET_NAME="CLIProxyAPI_${VERSION_NUM}_${PLATFORM}_${GOARCH}.${EXT}"
 DOWNLOAD_URL="https://github.com/$REPO/releases/download/$VERSION/$ASSET_NAME"
-DEST_BINARY="${BINARIES_DIR}/${SIDECAR_NAME}-${TARGET_TRIPLE}${BIN_SUFFIX}"
+DEST_BINARY="${BINARIES_DIR}/${SIDECAR_NAME}${BIN_SUFFIX}"
 
 if [ -f "$DEST_BINARY" ]; then
   echo "Binary already exists: $DEST_BINARY"
@@ -94,6 +109,6 @@ if [ -z "$SRC_BINARY" ]; then
 fi
 
 cp "$SRC_BINARY" "$DEST_BINARY"
-chmod +x "$DEST_BINARY"
+chmod +x "$DEST_BINARY" || true
 
 echo "Installed: $DEST_BINARY"

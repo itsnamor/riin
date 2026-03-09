@@ -54,53 +54,7 @@ jobs:
           workspaces: './tauri -> target'
 
       - name: Download target platform binary
-        run: |
-          REPO="router-for-me/CLIProxyAPI"
-          VERSION=$(curl -sL "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
-          VERSION_NUM="${VERSION#v}"
-          echo "CLIProxyAPI version: $VERSION"
-
-          mkdir -p tauri/binaries
-
-          TARGET="${{ matrix.rust_target }}"
-
-          # Map target to download parameters
-          case "$TARGET" in
-            aarch64-apple-darwin)      OS="darwin"; GOARCH="arm64"; EXT="tar.gz"; BIN_SUFFIX="" ;;
-            x86_64-apple-darwin)       OS="darwin"; GOARCH="amd64"; EXT="tar.gz"; BIN_SUFFIX="" ;;
-            aarch64-unknown-linux-gnu) OS="linux";  GOARCH="arm64"; EXT="tar.gz"; BIN_SUFFIX="" ;;
-            x86_64-unknown-linux-gnu)  OS="linux";  GOARCH="amd64"; EXT="tar.gz"; BIN_SUFFIX="" ;;
-            x86_64-pc-windows-msvc)    OS="windows"; GOARCH="amd64"; EXT="zip"; BIN_SUFFIX=".exe" ;;
-            *) echo "Error: Unknown target $TARGET"; exit 1 ;;
-          esac
-
-          ASSET_NAME="CLIProxyAPI_${VERSION_NUM}_${OS}_${GOARCH}.${EXT}"
-          DOWNLOAD_URL="https://github.com/$REPO/releases/download/$VERSION/$ASSET_NAME"
-
-          echo "Downloading $DOWNLOAD_URL for $TARGET ..."
-
-          curl -fSL -o "temp.${EXT}" "$DOWNLOAD_URL"
-          if [ "$EXT" = "zip" ]; then
-            unzip -q "temp.${EXT}" -d "temp_extracted"
-          else
-            mkdir -p "temp_extracted"
-            tar -xzf "temp.${EXT}" -C "temp_extracted"
-          fi
-
-          # Find and move binary to expected path for Tauri
-          BINARY=$(find temp_extracted \( -name "CLIProxyAPI${BIN_SUFFIX}" -o -name "cli-proxy-api${BIN_SUFFIX}" \) -type f | head -1)
-          if [ -z "$BINARY" ]; then
-            echo "Error: Binary not found in archive"
-            find temp_extracted -type f
-            exit 1
-          fi
-
-          mv "$BINARY" "tauri/binaries/cli-proxy-api${BIN_SUFFIX}"
-          chmod +x "tauri/binaries/cli-proxy-api${BIN_SUFFIX}" || true
-
-          rm -rf "temp.${EXT}" "temp_extracted"
-          echo "Downloaded binary:"
-          ls -la tauri/binaries/cli-proxy-api*
+        run: sh scripts/download-binaries.sh "" ${{ matrix.rust_target }}
         shell: bash
 
       - name: Build Tauri app
