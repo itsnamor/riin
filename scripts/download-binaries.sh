@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO="router-for-me/CLIProxyAPI"
-SIDECAR_NAME="cli-proxy-api"
+SIDECAR_NAME="riin-proxy"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BINARIES_DIR="$SCRIPT_DIR/../tauri/binaries"
 
@@ -74,7 +74,7 @@ fi
 
 ASSET_NAME="CLIProxyAPI_${VERSION_NUM}_${PLATFORM}_${GOARCH}.${EXT}"
 DOWNLOAD_URL="https://github.com/$REPO/releases/download/$VERSION/$ASSET_NAME"
-DEST_BINARY="${BINARIES_DIR}/${SIDECAR_NAME}${BIN_SUFFIX}"
+DEST_BINARY="${BINARIES_DIR}/${SIDECAR_NAME}-${TARGET_TRIPLE}${BIN_SUFFIX}"
 
 if [ -f "$DEST_BINARY" ]; then
   echo "Binary already exists: $DEST_BINARY"

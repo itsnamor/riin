@@ -36,7 +36,6 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-          cache: true
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -56,5 +55,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tauriScript: bunx tauri build
-          args: --target ${{ matrix.rust_target }}
+          tauriScript: bunx tauri
+          args: build --target ${{ matrix.rust_target }}

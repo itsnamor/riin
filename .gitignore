@@ -14,3 +14,5 @@ tauri/gen/schemas/
 # Env
 .env
 .env.local
+
+.temp/

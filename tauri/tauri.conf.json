@@ -12,7 +12,7 @@
     "active": true,
     "icon": ["icons/icon.icns", "icons/icon.ico", "icons/icon.png"],
     "resources": ["resources/config.default.yml"],
-    "externalBin": ["binaries/cli-proxy-api"]
+    "externalBin": ["binaries/riin-proxy"]
   },
   "app": {
     "windows": [
