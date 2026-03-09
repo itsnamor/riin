@@ -11,7 +11,6 @@
   "bundle": {
     "active": true,
     "icon": ["icons/icon.icns", "icons/icon.ico", "icons/icon.png"],
-    "targets": ["all"],
     "resources": ["resources/config.default.yml"],
     "externalBin": ["binaries/cli-proxy-api"]
   },
