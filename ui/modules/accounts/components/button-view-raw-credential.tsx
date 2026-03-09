@@ -24,7 +24,7 @@ export function ButtonViewRawCredential({ filename }: ButtonViewRawCredentialPro
               <Modal.Heading>Raw JSON content</Modal.Heading>
             </Modal.Header>
             <Modal.Body>
-              <div className="mb-2">~/.config/riin/{filename}</div>
+              <div className="mb-2">~/.config/riin/auth/{filename}</div>
               <pre className="overflow-auto rounded-xl bg-neutral-100 p-4">
                 <code className="font-mono">{JSON.stringify(item?.credential, null, 2) ?? "Credential not found"}</code>
               </pre>
