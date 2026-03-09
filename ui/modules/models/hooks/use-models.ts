@@ -1,6 +1,7 @@
+import { useModelsStore } from "$/core/stores/models";
 import { useConfig } from "$/modules/proxy";
 import ky from "ky";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type GetModelsResponse = {
   data: Array<{
@@ -15,10 +16,11 @@ type GetModelsResponse = {
 export function useModels() {
   const { config } = useConfig();
 
-  const [loading, setLoading] = useState(false);
-  const [models, setModels] = useState<GetModelsResponse["data"]>([]);
+  const [models, setModels] = useModelsStore();
 
-  const loadModels = async () => {
+  const [loading, setLoading] = useState(false);
+
+  const loadModels = useCallback(async () => {
     if (!config.host || !config.port) return;
 
     setLoading(true);
@@ -30,10 +32,9 @@ export function useModels() {
     setModels(data);
 
     setLoading(false);
-  };
+  }, [config, setModels]);
 
-  // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
-  useEffect(() => (loadModels(), undefined), []);
+  useEffect(() => (loadModels(), undefined), [loadModels]);
 
-  return { loading, models };
+  return { loading, models, refreshModels: loadModels };
 }

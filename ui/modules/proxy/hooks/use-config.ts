@@ -1,7 +1,7 @@
 import { useConfigStore } from "$/core/stores/config";
 import { toast } from "@heroui/react";
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { parse, stringify } from "yaml";
 
 export function useConfig() {
@@ -10,7 +10,7 @@ export function useConfig() {
 
   const [config, setConfig] = useConfigStore();
 
-  const loadConfig = async () => {
+  const loadConfig = useCallback(async () => {
     setLoading(true);
     try {
       const raw = await invoke<string>("read_config");
@@ -22,10 +22,9 @@ export function useConfig() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setConfig]);
 
-  // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
-  useEffect(() => (loadConfig(), undefined), []);
+  useEffect(() => (loadConfig(), undefined), [loadConfig]);
 
   const applyConfig = async () => {
     setApplying(true);

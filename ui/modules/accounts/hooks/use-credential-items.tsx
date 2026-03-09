@@ -1,14 +1,14 @@
 import { CredentialItem, useCredentialFilesStore } from "$/core/stores/credential";
 import { toast } from "@heroui/react";
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export function useCredentialItems() {
   const [items, setItems] = useCredentialFilesStore();
 
   const [loading, setLoading] = useState(false);
 
-  const loadItems = async () => {
+  const loadItems = useCallback(async () => {
     setLoading(true);
     try {
       const rawItems = await invoke<CredentialItem[]>("read_credentials");
@@ -19,10 +19,9 @@ export function useCredentialItems() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setItems]);
 
-  // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
-  useEffect(() => (loadItems(), undefined), []);
+  useEffect(() => (loadItems(), undefined), [loadItems]);
 
   return { loading, items, refreshItem: loadItems };
 }

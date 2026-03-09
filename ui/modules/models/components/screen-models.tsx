@@ -1,11 +1,13 @@
 import { useSetHeaderSlot } from "$/core/stores/layout";
 import { ButtonRefresh } from "$/core/ui";
-import { TableModels } from "$/modules/models/components/table-models";
+import { TableModels, useModels } from "$/modules/models";
 import { useProxyControl } from "$/modules/proxy";
 import { Alert } from "@heroui/react";
 
 export function ScreenModels() {
-  useSetHeaderSlot(<ButtonRefresh />);
+  const { refreshModels } = useModels();
+
+  useSetHeaderSlot(<ButtonRefresh onClick={refreshModels} />);
 
   const { status } = useProxyControl();
 
