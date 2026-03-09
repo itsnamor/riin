@@ -1,37 +1,22 @@
 import { Config } from "$/core/stores/config";
 import { useSetHeaderSlot } from "$/core/stores/layout";
+import { ButtonRefresh } from "$/core/ui";
+import { Loading } from "$/core/ui/loading";
 import { FieldLayout, FieldListText } from "$/modules/form";
-import { ButtonApplyConfig } from "$/modules/proxy/components/button-apply-config";
-import { useConfig } from "$/modules/proxy/hooks/use-config";
-import { Button, NumberField, Spinner, Select, ListBox } from "@heroui/react";
-import { Icon } from "@iconify/react";
+import { ButtonApplyConfig, useConfig } from "$/modules/proxy";
+import { ListBox, NumberField, Select } from "@heroui/react";
 
 export function ScreenProxy() {
   const { config, loading, applying, setConfig, applyConfig, refreshConfig } = useConfig();
 
   useSetHeaderSlot(
     <div className="flex gap-1">
-      <Button
-        variant="tertiary"
-        isIconOnly
-        size="sm"
-        onClick={refreshConfig}
-        isDisabled={loading || applying}
-        isPending={loading}
-      >
-        <Icon icon="solar:restart-line-duotone" />
-      </Button>
+      <ButtonRefresh onClick={refreshConfig} isDisabled={loading || applying} isPending={loading} />
       <ButtonApplyConfig onClick={applyConfig} isPending={applying} isDisabled={loading || applying} />
     </div>,
   );
 
-  if (loading) {
-    return (
-      <div className="flex justify-center gap-4">
-        <Spinner />
-      </div>
-    );
-  }
+  if (loading) return <Loading />;
 
   return (
     <div className="py-2">

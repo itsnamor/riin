@@ -2,7 +2,11 @@ import { useProxyControl } from "$/modules/proxy";
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
-export function ButtonToggleProxy() {
+type ButtonToggleProxyProps = {
+  fullWidth?: boolean;
+};
+
+export function ButtonToggleProxy({ fullWidth = false }: ButtonToggleProxyProps) {
   const { status, toggle } = useProxyControl();
 
   const isRunning = status === "running";
@@ -11,7 +15,7 @@ export function ButtonToggleProxy() {
   return (
     <Button
       variant={isRunning ? "danger" : "primary"}
-      fullWidth
+      fullWidth={fullWidth}
       onPress={toggle}
       isDisabled={isPending}
       isPending={isPending}

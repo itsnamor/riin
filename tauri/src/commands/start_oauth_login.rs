@@ -1,6 +1,6 @@
 use tauri::{AppHandle, Emitter};
-use tauri_plugin_shell::ShellExt;
 use tauri_plugin_shell::process::CommandEvent;
+use tauri_plugin_shell::ShellExt;
 
 use crate::helpers::config_path;
 use crate::types::OAuthState;

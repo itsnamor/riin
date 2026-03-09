@@ -18,13 +18,7 @@
         {
           "name": "cli-proxy-api",
           "sidecar": true,
-          "args": [
-            {
-              "validator": "--(antigravity|claude|codex)-login"
-            },
-            "--config",
-            { "validator": ".*" }
-          ]
+          "args": [{ "validator": "--(antigravity|claude|codex)-login" }, "--config", { "validator": ".*" }]
         }
       ]
     }

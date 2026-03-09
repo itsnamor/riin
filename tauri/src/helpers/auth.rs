@@ -16,8 +16,7 @@ pub fn read_all_credentials() -> Result<Vec<CredentialItem>, String> {
         return Ok(Vec::new());
     }
 
-    let entries =
-        fs::read_dir(&dir).map_err(|e| format!("Failed to read auth directory: {e}"))?;
+    let entries = fs::read_dir(&dir).map_err(|e| format!("Failed to read auth directory: {e}"))?;
 
     let mut credentials = Vec::new();
 
@@ -32,8 +31,8 @@ pub fn read_all_credentials() -> Result<Vec<CredentialItem>, String> {
                 .unwrap_or_default()
                 .to_string();
 
-            let content = fs::read_to_string(&path)
-                .map_err(|e| format!("Failed to read {filename}: {e}"))?;
+            let content =
+                fs::read_to_string(&path).map_err(|e| format!("Failed to read {filename}: {e}"))?;
 
             let credential: Credential = serde_json::from_str(&content)
                 .map_err(|e| format!("Failed to parse {filename}: {e}"))?;
@@ -54,8 +53,8 @@ pub fn write_credential(filename: &str, credential: &Credential) -> Result<(), S
     fs::create_dir_all(&dir).map_err(|e| format!("Failed to create auth directory: {e}"))?;
 
     let path = dir.join(filename);
-    let content =
-        serde_json::to_string_pretty(credential).map_err(|e| format!("Failed to serialize: {e}"))?;
+    let content = serde_json::to_string_pretty(credential)
+        .map_err(|e| format!("Failed to serialize: {e}"))?;
 
     fs::write(&path, content).map_err(|e| format!("Failed to write {filename}: {e}"))
 }

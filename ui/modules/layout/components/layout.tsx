@@ -6,7 +6,8 @@ import { Icon } from "@iconify/react";
 import { PropsWithChildren } from "react";
 
 const ITEMS = [
-  { icon: "solar:stars-bold-duotone", label: "Accounts" },
+  { icon: "solar:key-bold-duotone", label: "Accounts" },
+  { icon: "solar:bomb-emoji-bold-duotone", label: "Models" },
   { icon: "solar:server-2-bold-duotone", label: "Proxy" },
 ];
 
@@ -49,7 +50,7 @@ export function Layout({ children }: PropsWithChildren) {
               <Icon icon={isDark ? "solar:sun-bold-duotone" : "solar:moon-sleep-bold-duotone"} className="text-xl" />
             </Button>
 
-            <ButtonToggleProxy />
+            <ButtonToggleProxy fullWidth />
           </div>
         </aside>
       </div>

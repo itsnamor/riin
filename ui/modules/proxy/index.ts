@@ -3,3 +3,4 @@ export * from "./components/screen-proxy";
 export * from "./components/button-apply-config";
 
 export * from "./hooks/use-proxy-control";
+export * from "./hooks/use-config";

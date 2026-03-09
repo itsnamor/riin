@@ -19,11 +19,13 @@ pub fn ensure_config(app: &AppHandle) -> Result<PathBuf, String> {
 
     let resource_path = app
         .path()
-        .resolve("resources/config.default.yml", tauri::path::BaseDirectory::Resource)
+        .resolve(
+            "resources/config.default.yml",
+            tauri::path::BaseDirectory::Resource,
+        )
         .map_err(|e| format!("Failed to resolve default config resource: {e}"))?;
 
-    fs::copy(&resource_path, &target)
-        .map_err(|e| format!("Failed to copy default config: {e}"))?;
+    fs::copy(&resource_path, &target).map_err(|e| format!("Failed to copy default config: {e}"))?;
 
     Ok(target)
 }

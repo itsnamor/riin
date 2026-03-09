@@ -1,8 +1,9 @@
 import { useSetHeaderSlot } from "$/core/stores/layout";
-import { ButtonAddAccount, ToggleStatus, ButtonViewRawCredential, useCredentialItems } from "$/modules/accounts";
+import { ButtonRefresh } from "$/core/ui";
+import { Loading } from "$/core/ui/loading";
+import { ButtonAddAccount, ButtonViewRawCredential, ToggleStatus, useCredentialItems } from "$/modules/accounts";
 import { ButtonDeleteAccount } from "$/modules/accounts/components/button-delete-account";
-import { Button, EmptyState, Spinner, Table } from "@heroui/react";
-import { Icon } from "@iconify/react";
+import { EmptyState, Table } from "@heroui/react";
 import { capitalize } from "lodash-es";
 
 export function ScreenAccounts() {
@@ -10,21 +11,12 @@ export function ScreenAccounts() {
 
   useSetHeaderSlot(
     <div className="flex gap-1">
-      <Button variant="tertiary" isIconOnly size="sm" onClick={refreshItem} isDisabled={loading} isPending={loading}>
-        <Icon icon="solar:restart-line-duotone" />
-      </Button>
-
+      <ButtonRefresh onClick={refreshItem} isDisabled={loading} isPending={loading} />
       <ButtonAddAccount />
     </div>,
   );
 
-  if (loading) {
-    return (
-      <div className="flex justify-center gap-4">
-        <Spinner />
-      </div>
-    );
-  }
+  if (loading) return <Loading />;
 
   return (
     <Table>
