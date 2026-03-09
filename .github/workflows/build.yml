@@ -1,0 +1,107 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest'
+            args: '--target aarch64-apple-darwin'
+          - platform: 'macos-latest'
+            args: '--target x86_64-apple-darwin'
+          - platform: 'ubuntu-latest'
+            args: '--target x86_64-unknown-linux-gnu'
+          - platform: 'ubuntu-latest'
+            args: '--target aarch64-unknown-linux-gnu'
+          - platform: 'windows-latest'
+            args: '--target x86_64-pc-windows-msvc'
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.args == '--target aarch64-apple-darwin' && 'aarch64-apple-darwin' || matrix.args == '--target x86_64-apple-darwin' && 'x86_64-apple-darwin' || matrix.args == '--target x86_64-unknown-linux-gnu' && 'x86_64-unknown-linux-gnu' || matrix.args == '--target aarch64-unknown-linux-gnu' && 'aarch64-unknown-linux-gnu' || 'x86_64-pc-windows-msvc' }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './tauri -> target'
+
+      - name: Install frontend dependencies
+        run: bun install
+
+      - name: Download all platform binaries
+        run: |
+          REPO="router-for-me/CLIProxyAPI"
+          VERSION=$(curl -sL "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
+          VERSION_NUM="${VERSION#v}"
+          echo "CLIProxyAPI version: $VERSION"
+
+          mkdir -p tauri/binaries
+
+          download_binary() {
+            local OS=$1
+            local GOARCH=$2
+            local TARGET=$3
+            local EXT=$4
+            local BIN_SUFFIX=$5
+
+            ASSET_NAME="CLIProxyAPI_${VERSION_NUM}_${OS}_${GOARCH}.${EXT}"
+            DOWNLOAD_URL="https://github.com/$REPO/releases/download/$VERSION/$ASSET_NAME"
+
+            echo "Downloading $DOWNLOAD_URL ..."
+
+            if curl -fSL -o "temp.${EXT}" "$DOWNLOAD_URL"; then
+              if [ "$EXT" = "zip" ]; then
+                unzip -q "temp.${EXT}" -d "temp_extracted"
+              else
+                mkdir -p "temp_extracted"
+                tar -xzf "temp.${EXT}" -C "temp_extracted"
+              fi
+
+              find temp_extracted -name "*CLIProxyAPI*$BIN_SUFFIX" -type f -exec mv {} "tauri/binaries/cli-proxy-api-${TARGET}${BIN_SUFFIX}" \;
+              chmod +x "tauri/binaries/cli-proxy-api-${TARGET}${BIN_SUFFIX}" || true
+
+              rm -rf "temp.${EXT}" "temp_extracted"
+            else
+              echo "Warning: Failed to download $ASSET_NAME"
+            fi
+          }
+
+          download_binary "darwin" "arm64" "aarch64-apple-darwin" "tar.gz" ""
+          download_binary "darwin" "amd64" "x86_64-apple-darwin" "tar.gz" ""
+          download_binary "linux" "amd64" "x86_64-unknown-linux-gnu" "tar.gz" ""
+          download_binary "linux" "arm64" "aarch64-unknown-linux-gnu" "tar.gz" ""
+          download_binary "windows" "amd64" "x86_64-pc-windows-msvc" "zip" ".exe"
+          download_binary "windows" "arm64" "aarch64-pc-windows-msvc" "zip" ".exe"
+
+          ls -la tauri/binaries/
+        shell: bash
+
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tauriScript: bun run build
+          args: ${{ matrix.args }}
