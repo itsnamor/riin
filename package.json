@@ -1,18 +1,18 @@
 {
   "name": "riin",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": true,
   "scripts": {
     "dev": "tauri dev",
     "build": "tauri build",
-    "download:binaries": "sh scripts/download-binaries.sh",
+    "download:binaries": "bun run scripts/download-binaries.ts",
     "ui:dev": "vite",
     "ui:build": "vite build",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt --write ui/",
     "fmt:check": "oxfmt --check ui/",
-    "release": "sh scripts/release.sh"
+    "release": "bun run scripts/release.ts"
   },
   "dependencies": {
     "@heroui/react": "^3.0.0-beta.8",
