@@ -64,7 +64,8 @@ jobs:
       - name: Download external binaries
         shell: bash
         run: |
-          sh scripts/download-binaries.sh "" ${{ matrix.target }}
+          chmod +x scripts/download-binaries.sh
+          bash scripts/download-binaries.sh "" "${{ matrix.target }}"
 
       - name: Install frontend dependencies
         run: bun install

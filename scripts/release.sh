@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Release script: ./release.sh [major|minor|patch]
 
