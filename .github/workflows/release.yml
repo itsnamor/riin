@@ -62,10 +62,7 @@ jobs:
           workspaces: "./tauri -> target"
 
       - name: Download external binaries
-        shell: bash
-        run: |
-          chmod +x scripts/download-binaries.sh
-          bash scripts/download-binaries.sh "" "${{ matrix.target }}"
+        run: bun run download:binaries "" "${{ matrix.target }}"
 
       - name: Install frontend dependencies
         run: bun install
