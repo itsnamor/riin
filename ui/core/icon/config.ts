@@ -1,4 +1,9 @@
-import { icons } from "@iconify-json/solar";
-import { addCollection } from "@iconify/react";
+import { loadIcons } from "@iconify/react";
 
-addCollection(icons);
+loadIcons([
+  "solar:info-circle-line-duotone",
+  "solar:restart-line-duotone",
+  "solar:trash-bin-2-line-duotone",
+  "solar:copy-bold-duotone",
+  "solar:trash-bin-2-bold-duotone",
+]);
