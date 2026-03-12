@@ -22,7 +22,7 @@ pub fn start_oauth_login(
 
     let (mut rx, child) = app
         .shell()
-        .sidecar("cli-proxy-api")
+        .sidecar("riin-proxy")
         .map_err(|e| e.to_string())?
         .args([flag, "--config", &path.to_string_lossy()])
         .spawn()

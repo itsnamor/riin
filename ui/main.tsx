@@ -1,3 +1,4 @@
+import "$/core/icon/config";
 import "$/core/styles/main.css";
 import { useSidebarActiveItemValue } from "$/core/stores/layout";
 import { ScreenAccounts } from "$/modules/accounts";

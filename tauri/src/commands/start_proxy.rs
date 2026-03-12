@@ -16,7 +16,7 @@ pub fn start_proxy(app: AppHandle, state: tauri::State<'_, ProxyState>) -> Resul
 
     let (mut rx, child) = app
         .shell()
-        .sidecar("cli-proxy-api")
+        .sidecar("riin-proxy")
         .map_err(|e| e.to_string())?
         .args(["--config", &path.to_string_lossy()])
         .spawn()

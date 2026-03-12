@@ -11,12 +11,12 @@
       "identifier": "shell:allow-execute",
       "allow": [
         {
-          "name": "cli-proxy-api",
+          "name": "riin-proxy",
           "sidecar": true,
           "args": ["--config", { "validator": ".*" }]
         },
         {
-          "name": "cli-proxy-api",
+          "name": "riin-proxy",
           "sidecar": true,
           "args": [{ "validator": "--(antigravity|claude|codex)-login" }, "--config", { "validator": ".*" }]
         }
