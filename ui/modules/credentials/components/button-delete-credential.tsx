@@ -1,13 +1,13 @@
-import { useCredentialItems } from "$/modules/accounts";
+import { useCredentialItems } from "$/modules/credentials";
 import { Button, Modal, toast } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { invoke } from "@tauri-apps/api/core";
 
-type ButtonDeleteAccountProps = {
+type ButtonDeleteCredentialProps = {
   filename: string;
 };
 
-export function ButtonDeleteAccount({ filename }: ButtonDeleteAccountProps) {
+export function ButtonDeleteCredential({ filename }: ButtonDeleteCredentialProps) {
   const { refreshItem, loading } = useCredentialItems();
 
   const handleDelete = async () => {
@@ -16,7 +16,7 @@ export function ButtonDeleteAccount({ filename }: ButtonDeleteAccountProps) {
       await refreshItem();
     } catch (err) {
       console.error(err);
-      toast.danger("Failed to delete account");
+      toast.danger("Failed to delete credential");
     }
   };
 
@@ -31,10 +31,10 @@ export function ButtonDeleteAccount({ filename }: ButtonDeleteAccountProps) {
           <Modal.Dialog>
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Heading>Deleting account?</Modal.Heading>
+              <Modal.Heading>Deleting credential?</Modal.Heading>
             </Modal.Header>
             <Modal.Body>
-              <div>Are you sure you want to delete following account?</div>
+              <div>Are you sure you want to delete following credential?</div>
               <div className="text-danger mt-1 font-mono font-medium">{filename}</div>
             </Modal.Body>
 

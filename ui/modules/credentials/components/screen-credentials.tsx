@@ -1,18 +1,18 @@
 import { useSetHeaderSlot } from "$/core/stores/layout";
 import { ButtonRefresh } from "$/core/ui";
 import { Loading } from "$/core/ui/loading";
-import { ButtonAddAccount, ButtonViewRawCredential, ToggleStatus, useCredentialItems } from "$/modules/accounts";
-import { ButtonDeleteAccount } from "$/modules/accounts/components/button-delete-account";
+import { ButtonAddCredential, ButtonViewRawCredential, ToggleStatus, useCredentialItems } from "$/modules/credentials";
+import { ButtonDeleteCredential } from "$/modules/credentials/components/button-delete-credential";
 import { EmptyState, Table } from "@heroui/react";
 import { capitalize } from "lodash-es";
 
-export function ScreenAccounts() {
+export function ScreenCredentials() {
   const { items, loading, refreshItem } = useCredentialItems();
 
   useSetHeaderSlot(
     <div className="flex gap-1">
       <ButtonRefresh onClick={refreshItem} isDisabled={loading} isPending={loading} />
-      <ButtonAddAccount />
+      <ButtonAddCredential />
     </div>,
   );
 
@@ -45,7 +45,7 @@ export function ScreenAccounts() {
                 <Table.Cell>
                   <div className="flex">
                     <ButtonViewRawCredential filename={filename} />
-                    <ButtonDeleteAccount filename={filename} />
+                    <ButtonDeleteCredential filename={filename} />
                   </div>
                 </Table.Cell>
               </Table.Row>

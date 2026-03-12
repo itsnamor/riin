@@ -1,9 +1,9 @@
-import { useCredentialItems, useOAuthLogin } from "$/modules/accounts";
+import { useCredentialItems, useOAuthLogin } from "$/modules/credentials";
 import { Button, Dropdown, Header, Modal, Separator, Spinner } from "@heroui/react";
 import { capitalize } from "lodash-es";
 import { useState } from "react";
 
-export function ButtonAddAccount() {
+export function ButtonAddCredential() {
   const { refreshItem } = useCredentialItems();
 
   const [openOAuthModal, setOpenOAuthModal] = useState(false);

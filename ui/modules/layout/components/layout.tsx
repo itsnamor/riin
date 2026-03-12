@@ -6,7 +6,7 @@ import { Icon } from "@iconify/react";
 import { PropsWithChildren } from "react";
 
 const ITEMS = [
-  { icon: "solar:key-bold-duotone", label: "Accounts" },
+  { icon: "solar:key-bold-duotone", label: "Credentials" },
   { icon: "solar:bomb-emoji-bold-duotone", label: "Models" },
   { icon: "solar:server-2-bold-duotone", label: "Proxy" },
 ];

@@ -1,7 +1,7 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { ReactNode, useEffect } from "react";
 
-export const atomActiveItem = atom("Accounts");
+export const atomActiveItem = atom("Credentials");
 export const useSidebarActiveItem = () => useAtom(atomActiveItem);
 export const useSidebarActiveItemValue = () => useAtomValue(atomActiveItem);
 export const useSetSidebarActiveItem = () => useSetAtom(atomActiveItem);

@@ -1,7 +1,7 @@
 import "$/core/icon/config";
 import "$/core/styles/main.css";
 import { useSidebarActiveItemValue } from "$/core/stores/layout";
-import { ScreenAccounts } from "$/modules/accounts";
+import { ScreenCredentials } from "$/modules/credentials";
 import { Layout } from "$/modules/layout";
 import { ScreenModels } from "$/modules/models";
 import { ScreenProxy } from "$/modules/proxy";
@@ -16,7 +16,7 @@ function App() {
     <>
       <Layout>
         {activeItem === "Proxy" && <ScreenProxy />}
-        {activeItem === "Accounts" && <ScreenAccounts />}
+        {activeItem === "Credentials" && <ScreenCredentials />}
         {activeItem === "Models" && <ScreenModels />}
       </Layout>
 
