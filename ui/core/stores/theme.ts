@@ -1,7 +1,6 @@
+import { Theme } from "$/core/types";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
-
-export type Theme = "light" | "dark";
 
 export const atomTheme = atom<Theme>("light");
 

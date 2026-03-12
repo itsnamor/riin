@@ -1,5 +1,5 @@
-import { Config } from "$/core/stores/config";
 import { useSetHeaderSlot } from "$/core/stores/layout";
+import type { Config } from "$/core/types";
 import { ButtonRefresh } from "$/core/ui";
 import { Loading } from "$/core/ui/loading";
 import { FieldLayout, FieldListText } from "$/modules/form";

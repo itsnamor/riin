@@ -1,23 +1,6 @@
+import { Config } from "$/core/types";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { isNil } from "lodash-es";
-
-export type Config = {
-  host: string;
-  port: number;
-  ["api-keys"]: string[];
-  routing: {
-    strategy: "round-robin" | "fill-first";
-  };
-
-  "claude-api-key": Array<{
-    "api-key": string;
-    "base-url"?: string;
-    models?: Array<{
-      name: string;
-      alias: string;
-    }>;
-  }>;
-};
 
 const atomHost = atom<string>();
 const atomPort = atom<number>();

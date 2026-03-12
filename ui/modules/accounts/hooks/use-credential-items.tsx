@@ -1,4 +1,5 @@
-import { CredentialItem, useCredentialFilesStore } from "$/core/stores/credential";
+import { useCredentialFilesStore } from "$/core/stores/credential";
+import type { CredentialItem } from "$/core/types";
 import { toast } from "@heroui/react";
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useEffect, useState } from "react";

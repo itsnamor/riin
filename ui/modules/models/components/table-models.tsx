@@ -1,4 +1,4 @@
-import { Model } from "$/core/stores/models";
+import type { Model } from "$/core/types";
 import { Chip, EmptyState, Table } from "@heroui/react";
 
 type TableModelsProps = {
