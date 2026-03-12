@@ -1,135 +1,93 @@
 #!/usr/bin/env bun
 
-import { existsSync, readdirSync, copyFileSync, chmodSync, writeFileSync, mkdirSync, rmSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
+import { parseArgs } from "util";
 
 import { $ } from "bun";
 
 const REPO = "router-for-me/CLIProxyAPI";
 const SIDECAR_NAME = "riin-proxy";
-const BINARIES_DIR = join(process.cwd(), "tauri", "binaries");
+const BINARIES_DIR = join(import.meta.dir, "..", "tauri", "binaries");
 
-const VERSION = process.argv[2];
-const TARGET = process.argv[3];
-
-const PLATFORMS = {
-  darwin: { arm64: "aarch64-apple-darwin", amd64: "x86_64-apple-darwin" },
-  windows: { arm64: "aarch64-pc-windows-msvc", amd64: "x86_64-pc-windows-msvc" },
-  linux: { arm64: "aarch64-unknown-linux-gnu", amd64: "x86_64-unknown-linux-gnu" },
+const TRIPLES: Record<string, { os: string; arch: string }> = {
+  "aarch64-apple-darwin": { os: "darwin", arch: "arm64" },
+  "x86_64-apple-darwin": { os: "darwin", arch: "amd64" },
+  "aarch64-pc-windows-msvc": { os: "windows", arch: "arm64" },
+  "x86_64-pc-windows-msvc": { os: "windows", arch: "amd64" },
+  "aarch64-unknown-linux-gnu": { os: "linux", arch: "arm64" },
+  "x86_64-unknown-linux-gnu": { os: "linux", arch: "amd64" },
 };
 
-function getTargetTriple(): { os: string; arch: string; triple: string } {
-  if (TARGET) {
-    const map: Record<string, { os: string; arch: string }> = {
-      "aarch64-apple-darwin": { os: "darwin", arch: "arm64" },
-      "x86_64-apple-darwin": { os: "darwin", arch: "amd64" },
-      "x86_64-pc-windows-msvc": { os: "windows", arch: "amd64" },
-      "aarch64-pc-windows-msvc": { os: "windows", arch: "arm64" },
-      "x86_64-unknown-linux-gnu": { os: "linux", arch: "amd64" },
-      "aarch64-unknown-linux-gnu": { os: "linux", arch: "arm64" },
-    };
-    const found = map[TARGET];
-    if (!found) {
-      console.error(`Unknown target: ${TARGET}`);
-      process.exit(1);
-    }
-    return { ...found, triple: TARGET };
+const OS_MAP: Record<string, string> = { win32: "windows", darwin: "darwin", linux: "linux" };
+const ARCH_MAP: Record<string, string> = { arm64: "arm64", x64: "amd64" };
+
+const { values: flags } = parseArgs({
+  args: Bun.argv.slice(2),
+  options: {
+    version: { type: "string", short: "v" },
+    target: { type: "string", short: "t" },
+  },
+});
+
+function getTarget() {
+  if (flags.target) {
+    const info = TRIPLES[flags.target];
+    if (!info) throw new Error(`Unknown target: ${flags.target}`);
+    return { ...info, triple: flags.target };
   }
 
-  const os =
-    process.platform === "win32"
-      ? "windows"
-      : process.platform === "darwin"
-        ? "darwin"
-        : process.platform === "linux"
-          ? "linux"
-          : null;
-  const arch = process.arch === "arm64" ? "arm64" : process.arch === "x64" ? "amd64" : null;
+  const os = OS_MAP[process.platform];
+  const arch = ARCH_MAP[process.arch];
+  if (!os || !arch) throw new Error(`Unsupported: ${process.platform}/${process.arch}`);
 
-  if (!os || !arch) {
-    console.error(`Unsupported platform: ${process.platform}/${process.arch}`);
-    process.exit(1);
-  }
-
-  return { os, arch, triple: PLATFORMS[os][arch] };
+  const triple = Object.entries(TRIPLES).find(([, v]) => v.os === os && v.arch === arch)?.[0];
+  if (!triple) throw new Error(`No triple for ${os}/${arch}`);
+  return { os, arch, triple };
 }
 
-async function getVersion(): Promise<string> {
-  if (VERSION) return VERSION.replace(/^v/, "");
-
-  const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`);
-  const data = (await res.json()) as { tag_name: string };
-  return data.tag_name.replace(/^v/, "");
+async function getVersion() {
+  if (flags.version) return flags.version.replace(/^v/, "");
+  const json = await $`curl -sfL https://api.github.com/repos/${REPO}/releases/latest`.json();
+  return (json as { tag_name: string }).tag_name.replace(/^v/, "");
 }
 
-async function download(url: string, path: string) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Download failed: ${res.status}`);
-  writeFileSync(path, Buffer.from(await res.arrayBuffer()));
+const { os, arch, triple } = getTarget();
+const version = await getVersion();
+const isWindows = os === "windows";
+const ext = isWindows ? "zip" : "tar.gz";
+const dest = join(BINARIES_DIR, `${SIDECAR_NAME}-${triple}${isWindows ? ".exe" : ""}`);
+
+if (await Bun.file(dest).exists()) {
+  console.log(`Already exists: ${dest}`);
+  process.exit(0);
 }
 
-async function extract(file: string, isZip: boolean): Promise<string> {
-  const dir = join(tmpdir(), `riin-${Date.now()}`, "out");
-  mkdirSync(dir, { recursive: true });
+const url = `https://github.com/${REPO}/releases/download/v${version}/CLIProxyAPI_${version}_${os}_${arch}.${ext}`;
+const tmp = join(tmpdir(), `riin-${Date.now()}`);
+const archive = join(tmp, `archive.${ext}`);
 
-  if (isZip) {
-    await $`unzip -q ${file} -d ${dir}`;
-  } else {
-    await $`tar -xzf ${file} -C ${dir}`;
-  }
+console.log(`Downloading ${url}...`);
+await $`mkdir -p ${tmp}`;
+await $`curl -fSL -o ${archive} ${url}`;
 
-  return dir;
-}
+console.log("Extracting...");
+const out = join(tmp, "out");
+await $`mkdir -p ${out}`;
+if (isWindows) await $`unzip -q ${archive} -d ${out}`;
+else await $`tar -xzf ${archive} -C ${out}`;
 
-function findBinary(dir: string): string | null {
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const path = join(dir, entry.name);
-    if (entry.isFile() && (entry.name.includes("CLIProxyAPI") || entry.name.includes("cli-proxy-api"))) return path;
-    if (entry.isDirectory()) {
-      const found = findBinary(path);
-      if (found) return found;
-    }
-  }
-  return null;
-}
+const glob = new Bun.Glob("**/*");
+const bin = [...glob.scanSync({ cwd: out, onlyFiles: true })].find(
+  (f) => f.includes("CLIProxyAPI") || f.includes("cli-proxy-api"),
+);
+if (!bin) throw new Error("Binary not found in archive");
 
-async function main() {
-  const { os, arch, triple } = getTargetTriple();
-  const version = await getVersion();
-  const ext = os === "windows" ? "zip" : "tar.gz";
+await $`mkdir -p ${BINARIES_DIR}`;
+await $`cp ${join(out, bin)} ${dest}`;
 
-  const asset = `CLIProxyAPI_${version}_${os}_${arch}.${ext}`;
-  const url = `https://github.com/${REPO}/releases/download/v${version}/${asset}`;
-  const dest = join(BINARIES_DIR, `${SIDECAR_NAME}-${triple}${os === "windows" ? ".exe" : ""}`);
+if (!isWindows) await $`chmod 755 ${dest}`;
 
-  if (existsSync(dest)) {
-    console.log(`Already exists: ${dest}`);
-    return;
-  }
+await $`rm -rf ${tmp}`;
 
-  mkdirSync(BINARIES_DIR, { recursive: true });
-
-  const tmp = join(tmpdir(), `riin-${Date.now()}`, asset);
-  mkdirSync(join(tmp, ".."), { recursive: true });
-
-  console.log(`Downloading ${url}...`);
-  await download(url, tmp);
-
-  console.log("Extracting...");
-  const dir = await extract(tmp, ext === "zip");
-  const bin = findBinary(dir);
-
-  if (!bin) {
-    console.error("Binary not found");
-    process.exit(1);
-  }
-
-  copyFileSync(bin, dest);
-  chmodSync(dest, 0o755);
-  rmSync(join(tmp, ".."), { recursive: true, force: true });
-
-  console.log(`Installed: ${dest}`);
-}
-
-main();
+console.log(`Installed: ${dest}`);
