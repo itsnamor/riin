@@ -1,6 +1,6 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 
-type Model = {
+export type Model = {
   created: number;
   id: string;
   object: string;

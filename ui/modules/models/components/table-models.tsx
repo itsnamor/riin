@@ -1,12 +1,11 @@
-import { Loading } from "$/core/ui/loading";
-import { useModels } from "$/modules/models/hooks/use-models";
+import { Model } from "$/core/stores/models";
 import { Chip, EmptyState, Table } from "@heroui/react";
 
-export function TableModels() {
-  const { loading, models } = useModels();
+type TableModelsProps = {
+  models: Array<Model>;
+};
 
-  if (loading) return <Loading />;
-
+export function TableModels({ models }: TableModelsProps) {
   return (
     <Table>
       <Table.ScrollContainer>

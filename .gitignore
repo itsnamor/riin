@@ -16,3 +16,5 @@ tauri/gen/schemas/
 .env.local
 
 .temp/
+
+openspec
