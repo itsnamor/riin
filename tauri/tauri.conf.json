@@ -1,6 +1,6 @@
 {
   "productName": "riin",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "identifier": "com.riin.app",
   "build": {
     "beforeDevCommand": "bun run download:binaries && bun run ui:dev",
