@@ -36,7 +36,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; img-src 'self' data:",
+      "csp": "default-src 'self'; connect-src 'self' http://* https://*; img-src 'self' data:;",
       "capabilities": [
         "default"
       ]

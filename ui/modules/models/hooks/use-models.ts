@@ -32,7 +32,7 @@ export function useModels() {
 
       setModels(data);
     } catch (error) {
-      console.error(error);
+      console.error(String(error));
       toast.danger(String(error));
     } finally {
       setLoading(false);
