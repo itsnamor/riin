@@ -1,5 +1,6 @@
 import { useModelsStore } from "$/core/stores/models";
 import { useConfig } from "$/modules/proxy";
+import { toast } from "@heroui/react";
 import ky from "ky";
 import { useCallback, useEffect, useState } from "react";
 
@@ -23,15 +24,19 @@ export function useModels() {
   const loadModels = useCallback(async () => {
     if (!config.host || !config.port) return;
 
-    setLoading(true);
+    try {
+      setLoading(true);
+      const { data } = await ky(`http://${config.host}:${config.port}/v1/models`, {
+        headers: { "x-api-key": config["api-keys"]![0] },
+      }).json<GetModelsResponse>();
 
-    const { data } = await ky(`http://${config.host}:${config.port}/v1/models`, {
-      headers: { "x-api-key": config["api-keys"]![0] },
-    }).json<GetModelsResponse>();
-
-    setModels(data);
-
-    setLoading(false);
+      setModels(data);
+    } catch (error) {
+      console.error(error);
+      toast.danger(String(error));
+    } finally {
+      setLoading(false);
+    }
   }, [config, setModels]);
 
   useEffect(() => (loadModels(), undefined), [loadModels]);

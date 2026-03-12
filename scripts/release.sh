@@ -60,6 +60,9 @@ else
   git tag v$NEW_VERSION
 fi
 
+# Push commits and tags to trigger CI
+echo "Pushing changes and tags to remote..."
+git push origin main --tags
+
 echo ""
-echo "Run the following to push and trigger release:"
-echo "  git push origin main --tags"
+echo "Release v$NEW_VERSION triggered! CI will build and create release."
