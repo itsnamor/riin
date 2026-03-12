@@ -3,24 +3,16 @@
   "version": "0.1.11",
   "identifier": "com.riin.app",
   "build": {
-    "beforeDevCommand": "bun run download:binaries && bun run ui:dev",
-    "beforeBuildCommand": "bun run download:binaries && bun run ui:build",
+    "beforeDevCommand": "bun run ui:dev",
+    "beforeBuildCommand": "bun run ui:build",
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173"
   },
   "bundle": {
     "active": true,
-    "icon": [
-      "icons/icon.icns",
-      "icons/icon.ico",
-      "icons/icon.png"
-    ],
-    "resources": [
-      "resources/config.default.yml"
-    ],
-    "externalBin": [
-      "binaries/riin-proxy"
-    ]
+    "icon": ["icons/icon.icns", "icons/icon.ico", "icons/icon.png"],
+    "resources": ["resources/config.default.yml"],
+    "externalBin": ["binaries/riin-proxy"]
   },
   "app": {
     "windows": [
@@ -37,9 +29,7 @@
     ],
     "security": {
       "csp": "default-src 'self'; img-src 'self' data:",
-      "capabilities": [
-        "default"
-      ]
+      "capabilities": ["default"]
     }
   }
 }
