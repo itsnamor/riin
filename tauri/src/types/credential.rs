@@ -16,6 +16,8 @@ pub struct Credential {
     pub last_refresh: String,
     #[serde(default)]
     pub refresh_token: String,
+    #[serde(default)]
+    pub username: String,
     #[serde(rename = "type")]
     pub credential_type: String,
 }

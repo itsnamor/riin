@@ -8,7 +8,7 @@ import {
   useCredentialItems,
 } from "$/modules/credentials";
 import { EmptyState, Table } from "@heroui/react";
-import { capitalize } from "lodash-es";
+import { startCase } from "lodash-es";
 
 export function ScreenCredentials() {
   const { items, loading, refreshItem } = useCredentialItems();
@@ -27,7 +27,7 @@ export function ScreenCredentials() {
       <Table.ScrollContainer>
         <Table.Content>
           <Table.Header>
-            <Table.Column isRowHeader>Email</Table.Column>
+            <Table.Column isRowHeader>Account</Table.Column>
             <Table.Column isRowHeader>Status</Table.Column>
             <Table.Column isRowHeader>Actions</Table.Column>
           </Table.Header>
@@ -37,9 +37,9 @@ export function ScreenCredentials() {
               <Table.Row key={filename} id={filename}>
                 <Table.Cell>
                   <div className="flex flex-col gap-1">
-                    <span> {credential.email} </span>
+                    <span>{credential.email || credential.username}</span>
                     <div>
-                      <span className="text-muted text-xs">{capitalize(credential.type)}</span>
+                      <span className="text-muted text-xs">{startCase(credential.type)}</span>
                     </div>
                   </div>
                 </Table.Cell>

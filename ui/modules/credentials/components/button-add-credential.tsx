@@ -8,7 +8,7 @@ export function ButtonAddCredential() {
 
   const [openOAuthModal, setOpenOAuthModal] = useState(false);
 
-  const { startLogin, cancelLogin, pending } = useOAuthLogin({
+  const { startLogin, cancelLogin, pending, deviceCode } = useOAuthLogin({
     onSuccess: () => {
       setOpenOAuthModal(false);
       refreshItem();
@@ -24,6 +24,14 @@ export function ButtonAddCredential() {
     }
   };
 
+  const handleClose = async () => {
+    await cancelLogin();
+    setOpenOAuthModal(false);
+  };
+
+  const isCopilot = pending === "copilot";
+  const hasDeviceCode = deviceCode?.user_code && deviceCode?.verification_uri;
+
   return (
     <>
       <Dropdown>
@@ -35,6 +43,7 @@ export function ButtonAddCredential() {
             <Dropdown.Item id="oauth-antigravity">Antigravity</Dropdown.Item>
             <Dropdown.Item id="oauth-claude">Claude</Dropdown.Item>
             <Dropdown.Item id="oauth-codex">Codex</Dropdown.Item>
+            <Dropdown.Item id="oauth-copilot">GitHub Copilot</Dropdown.Item>
 
             <Separator />
 
@@ -44,20 +53,18 @@ export function ButtonAddCredential() {
         </Dropdown.Popover>
       </Dropdown>
 
-      <Modal
-        isOpen={openOAuthModal}
-        onOpenChange={async (open) => {
-          if (!open) await cancelLogin();
-          setOpenOAuthModal(false);
-        }}
-      >
+      <Modal isOpen={openOAuthModal} onOpenChange={(open) => !open && handleClose()}>
         <Modal.Backdrop isDismissable={false}>
           <Modal.Container>
             <Modal.Dialog>
               <Modal.Header>
                 <Modal.Heading>Login via OAuth</Modal.Heading>
               </Modal.Header>
-              <Modal.Body>Waiting for {capitalize(pending ?? "")} login to complete...</Modal.Body>
+              <Modal.Body className="space-y-4">
+                <div>Waiting for {capitalize(pending ?? "")} login to complete...</div>
+
+                {isCopilot && hasDeviceCode && <code className="text-lg font-semibold">{deviceCode.user_code}</code>}
+              </Modal.Body>
               <Modal.Footer>
                 <Button slot="close" variant="danger-soft" fullWidth>
                   <Spinner color="danger" size="sm" /> Cancel

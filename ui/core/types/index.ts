@@ -37,6 +37,7 @@ export type Credential = {
   access_token: string;
   disabled: boolean;
   email: string;
+  username?: string;
   expired: string;
   id_token: string;
   last_refresh: string;
@@ -47,4 +48,10 @@ export type Credential = {
 export type CredentialItem = {
   filename: string;
   credential: Credential;
+};
+
+export type DeviceCodeInfo = {
+  provider: string;
+  verification_uri: string;
+  user_code: string;
 };
