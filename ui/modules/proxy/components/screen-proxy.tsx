@@ -1,9 +1,8 @@
 import { useSetHeaderSlot } from "$/core/stores";
-import type { Config } from "$/core/types";
 import { ButtonRefresh, Loading } from "$/core/ui";
 import { FieldLayout, FieldListText } from "$/modules/form";
 import { ButtonApplyConfig, useConfig } from "$/modules/proxy";
-import { ListBox, NumberField, Select } from "@heroui/react";
+import { NumberField } from "@heroui/react";
 
 export function ScreenProxy() {
   const { config, loading, applying, setConfig, applyConfig, refreshConfig } = useConfig();
@@ -35,32 +34,8 @@ export function ScreenProxy() {
           </NumberField>
         </FieldLayout>
 
-        <FieldLayout label="API Keys" direction="vertical">
+        <FieldLayout label="API Keys" description="Client API keys for authenticating to this proxy (optional when disable-auth is true)" direction="vertical">
           <FieldListText value={config["api-keys"]} onChange={(keys) => setConfig({ "api-keys": keys })} />
-        </FieldLayout>
-
-        <FieldLayout label="Routing strategy" description="For selecting credentials when multiple match">
-          <Select
-            value={config.routing.strategy}
-            onChange={(strategy) => setConfig({ routing: { strategy: strategy as Config["routing"]["strategy"] } })}
-          >
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
-                <ListBox.Item id="round-robin">
-                  Round-robin
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
-                <ListBox.Item id="fill-first">
-                  Fill first
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
-              </ListBox>
-            </Select.Popover>
-          </Select>
         </FieldLayout>
       </div>
     </div>

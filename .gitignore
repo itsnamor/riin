@@ -18,3 +18,5 @@ tauri/gen/schemas/
 .temp/
 
 openspec
+scripts/download-binaries.ts
+.playwright-mcp/

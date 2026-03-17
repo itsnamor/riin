@@ -21,14 +21,12 @@ export function useModels() {
   const [loading, setLoading] = useState(false);
 
   const loadModels = useCallback(async () => {
-    if (!config.host || !config.port) return;
+    if (!config.port) return;
 
     try {
       setLoading(true);
       console.log(config);
-      const { data } = await ky(`http://${config.host}:${config.port}/v1/models`, {
-        headers: { "x-api-key": config["api-keys"]![0] },
-      }).json<GetModelsResponse>();
+      const { data } = await ky(`http://127.0.0.1:${config.port}/v1/models`).json<GetModelsResponse>();
 
       setModels(data);
     } catch (error) {

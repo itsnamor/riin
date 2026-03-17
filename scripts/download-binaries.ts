@@ -6,7 +6,7 @@ import { parseArgs } from "util";
 
 import { $ } from "bun";
 
-const REPO = "router-for-me/CLIProxyAPI";
+const REPO = "nghyane/llm-mux";
 const SIDECAR_NAME = "riin-proxy";
 const BINARIES_DIR = join(import.meta.dir, "..", "tauri", "binaries");
 
@@ -63,7 +63,7 @@ if (await Bun.file(dest).exists()) {
   process.exit(0);
 }
 
-const url = `https://github.com/${REPO}/releases/download/v${version}/CLIProxyAPI_${version}_${os}_${arch}.${ext}`;
+const url = `https://github.com/${REPO}/releases/download/v${version}/llm-mux_${version}_${os}_${arch}.${ext}`;
 const tmp = join(tmpdir(), `riin-${Date.now()}`);
 const archive = join(tmp, `archive.${ext}`);
 
@@ -78,9 +78,7 @@ if (isWindows) await $`unzip -q ${archive} -d ${out}`;
 else await $`tar -xzf ${archive} -C ${out}`;
 
 const glob = new Bun.Glob("**/*");
-const bin = [...glob.scanSync({ cwd: out, onlyFiles: true })].find(
-  (f) => f.includes("CLIProxyAPI") || f.includes("cli-proxy-api"),
-);
+const bin = [...glob.scanSync({ cwd: out, onlyFiles: true })].find((f) => f.includes("llm-mux"));
 if (!bin) throw new Error("Binary not found in archive");
 
 await $`mkdir -p ${BINARIES_DIR}`;

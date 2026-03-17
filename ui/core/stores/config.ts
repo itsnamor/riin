@@ -1,26 +1,39 @@
-import { Config } from "$/core/types";
+import { Config, Provider } from "$/core/types";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { isNil } from "lodash-es";
 
-const atomHost = atom<string>();
 const atomPort = atom<number>();
+const atomAuthDir = atom<string>();
 const atomApiKeys = atom<string[]>();
-const atomRoutingStrategy = atom<Config["routing"]["strategy"]>("round-robin");
+const atomDisableAuth = atom<boolean>();
+const atomDebug = atom<boolean>();
+const atomLoggingToFile = atom<boolean>();
+const atomProxyUrl = atom<string>();
+const atomRequestRetry = atom<number>();
+const atomProviders = atom<Provider[]>();
 
 const atomConfig = atom(
   (get) => ({
-    host: get(atomHost),
     port: get(atomPort),
-    ["api-keys"]: get(atomApiKeys),
-    routing: {
-      strategy: get(atomRoutingStrategy),
-    },
+    "auth-dir": get(atomAuthDir),
+    "api-keys": get(atomApiKeys),
+    "disable-auth": get(atomDisableAuth),
+    debug: get(atomDebug),
+    "logging-to-file": get(atomLoggingToFile),
+    "proxy-url": get(atomProxyUrl),
+    "request-retry": get(atomRequestRetry),
+    providers: get(atomProviders),
   }),
   (_get, set, cfg: Partial<Config>) => {
-    if (!isNil(cfg.host)) set(atomHost, cfg.host);
     if (!isNil(cfg.port)) set(atomPort, cfg.port);
+    if (!isNil(cfg["auth-dir"])) set(atomAuthDir, cfg["auth-dir"]);
     if (!isNil(cfg["api-keys"])) set(atomApiKeys, cfg["api-keys"]);
-    if (!isNil(cfg.routing?.strategy)) set(atomRoutingStrategy, cfg.routing.strategy);
+    if (!isNil(cfg["disable-auth"])) set(atomDisableAuth, cfg["disable-auth"]);
+    if (!isNil(cfg.debug)) set(atomDebug, cfg.debug);
+    if (!isNil(cfg["logging-to-file"])) set(atomLoggingToFile, cfg["logging-to-file"]);
+    if (!isNil(cfg["proxy-url"])) set(atomProxyUrl, cfg["proxy-url"]);
+    if (!isNil(cfg["request-retry"])) set(atomRequestRetry, cfg["request-retry"]);
+    if (!isNil(cfg.providers)) set(atomProviders, cfg.providers);
   },
 );
 
