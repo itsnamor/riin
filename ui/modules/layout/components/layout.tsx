@@ -1,5 +1,4 @@
-import { useHeaderSlotValue, useSidebarActiveItem } from "$/core/stores/layout";
-import { useTheme, useThemeSync } from "$/core/stores/theme";
+import { useHeaderSlotValue, useSidebarActiveItem, useTheme, useThemeSync } from "$/core/stores";
 import { ButtonToggleProxy } from "$/modules/proxy";
 import { Button, cn } from "@heroui/react";
 import { Icon } from "@iconify/react";

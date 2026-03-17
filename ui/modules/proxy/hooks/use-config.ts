@@ -1,4 +1,4 @@
-import { useConfigStore } from "$/core/stores/config";
+import { useConfigStore } from "$/core/stores";
 import { toast } from "@heroui/react";
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useEffect, useState } from "react";

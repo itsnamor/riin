@@ -1,4 +1,4 @@
-import { useCredentialFilesStore } from "$/core/stores/credential";
+import { useCredentialFilesStore } from "$/core/stores";
 import { Switch, toast } from "@heroui/react";
 import { invoke } from "@tauri-apps/api/core";
 

@@ -1,4 +1,4 @@
-import { useModelsStore } from "$/core/stores/models";
+import { useModelsStore } from "$/core/stores";
 import { useConfig } from "$/modules/proxy";
 import ky from "ky";
 import { useCallback, useEffect, useState } from "react";

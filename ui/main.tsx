@@ -1,6 +1,6 @@
 import "$/core/icon/config";
 import "$/core/styles/main.css";
-import { useSidebarActiveItemValue } from "$/core/stores/layout";
+import { useSidebarActiveItemValue } from "$/core/stores";
 import { ScreenCredentials } from "$/modules/credentials";
 import { Layout } from "$/modules/layout";
 import { ScreenModels } from "$/modules/models";

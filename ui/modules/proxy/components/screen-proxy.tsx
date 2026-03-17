@@ -1,7 +1,6 @@
-import { useSetHeaderSlot } from "$/core/stores/layout";
+import { useSetHeaderSlot } from "$/core/stores";
 import type { Config } from "$/core/types";
-import { ButtonRefresh } from "$/core/ui";
-import { Loading } from "$/core/ui/loading";
+import { ButtonRefresh, Loading } from "$/core/ui";
 import { FieldLayout, FieldListText } from "$/modules/form";
 import { ButtonApplyConfig, useConfig } from "$/modules/proxy";
 import { ListBox, NumberField, Select } from "@heroui/react";

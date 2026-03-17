@@ -1,4 +1,4 @@
-import { useProxyStatus } from "$/core/stores/server";
+import { useProxyStatus } from "$/core/stores";
 import { toast } from "@heroui/react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";

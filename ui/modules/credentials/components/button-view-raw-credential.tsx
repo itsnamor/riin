@@ -1,4 +1,4 @@
-import { useCredentialFilesValue } from "$/core/stores/credential";
+import { useCredentialFilesValue } from "$/core/stores";
 import { Button, Modal } from "@heroui/react";
 import { Icon } from "@iconify/react";
 

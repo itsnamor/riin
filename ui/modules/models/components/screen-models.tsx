@@ -1,6 +1,5 @@
-import { useSetHeaderSlot } from "$/core/stores/layout";
-import { ButtonRefresh } from "$/core/ui";
-import { Loading } from "$/core/ui/loading";
+import { useSetHeaderSlot } from "$/core/stores";
+import { ButtonRefresh, Loading } from "$/core/ui";
 import { TableModels, useModels } from "$/modules/models";
 import { useProxyControl } from "$/modules/proxy";
 import { Alert } from "@heroui/react";

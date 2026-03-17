@@ -1,8 +1,6 @@
-import { useSetHeaderSlot } from "$/core/stores/layout";
-import { ButtonRefresh } from "$/core/ui";
-import { Loading } from "$/core/ui/loading";
-import { ButtonAddCredential, ButtonViewRawCredential, ToggleStatus, useCredentialItems } from "$/modules/credentials";
-import { ButtonDeleteCredential } from "$/modules/credentials/components/button-delete-credential";
+import { useSetHeaderSlot } from "$/core/stores";
+import { ButtonRefresh, Loading } from "$/core/ui";
+import { ButtonAddCredential, ButtonDeleteCredential, ButtonViewRawCredential, ToggleStatus, useCredentialItems } from "$/modules/credentials";
 import { EmptyState, Table } from "@heroui/react";
 import { capitalize } from "lodash-es";
 
